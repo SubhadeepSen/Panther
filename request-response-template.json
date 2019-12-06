@@ -1,0 +1,132 @@
+[ {
+  "description" : "Publish Message To Queue",
+  "authToken": "Basic cXVldWUtbWFuYWdlcjpxdWV1ZU1hbmFnZXJAMTIzNDU=",
+  "request" : {
+    "url" : "http://localhost:8085/message-queue-manager/api/message",
+    "method" : "POST",
+    "body" : {
+      "queueName" : "string",
+      "messageId" : "string",
+      "message" : "string"
+    },
+    "headers" : {
+      "Authorization" : null,
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    }
+  },
+  "response" : {
+    "status" : "200",
+    "body" : {
+      "queueName" : "string",
+      "messageId" : "string",
+      "message" : "string"
+    }
+  }
+}, {
+  "description" : "Consume Message From Queue",
+  "request" : {
+    "url" : "http://localhost:8085/message-queue-manager/api/message/{queueName}",
+    "method" : "DELETE",
+    "pathParams" : {
+      "queueName" : null
+    },
+    "headers" : {
+      "Authorization" : null,
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    }
+  },
+  "response" : {
+    "status" : "200",
+    "body" : {
+      "queueName" : "string",
+      "messageId" : "string",
+      "message" : "string"
+    }
+  }
+}, {
+  "description" : "Retreive Messages From Queue",
+  "request" : {
+    "url" : "http://localhost:8085/message-queue-manager/api/messages/{queueName}",
+    "method" : "GET",
+    "pathParams" : {
+      "queueName" : null
+    },
+    "headers" : {
+      "Authorization" : null,
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    }
+  },
+  "response" : {
+    "status" : "200",
+    "body" : [ {
+      "queueName" : "string",
+      "messageId" : "string",
+      "message" : "string"
+    } ]
+  }
+}, {
+  "description" : "Retreive Messages From Queue in Chunks",
+  "request" : {
+    "url" : "http://localhost:8085/message-queue-manager/api/messages/{queueName}/{page}/{pageSize}",
+    "method" : "GET",
+    "pathParams" : {
+      "queueName" : null,
+      "page" : null,
+      "pageSize" : null
+    },
+    "headers" : {
+      "Authorization" : null,
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    }
+  },
+  "response" : {
+    "status" : "200",
+    "body" : [ {
+      "queueName" : "string",
+      "messageId" : "string",
+      "message" : "string"
+    } ]
+  }
+}, {
+  "description" : "Delete Queue",
+  "request" : {
+    "url" : "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
+    "method" : "DELETE",
+    "pathParams" : {
+      "queueName" : null
+    },
+    "headers" : {
+      "Authorization" : null,
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    }
+  },
+  "response" : {
+    "status" : "200",
+    "body" : {
+      "type" : "boolean"
+    }
+  }
+}, {
+  "description" : "Retrieve All Message Queues",
+  "request" : {
+    "url" : "http://localhost:8085/message-queue-manager/api/queues",
+    "method" : "GET",
+    "headers" : {
+      "Authorization" : null,
+      "Accept" : "application/json",
+      "Content-Type" : "application/json"
+    }
+  },
+  "response" : {
+    "status" : "200",
+    "body" : [ {
+      "queueId" : "string",
+      "queueName" : "string"
+    } ]
+  }
+} ]
