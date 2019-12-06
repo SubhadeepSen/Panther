@@ -29,7 +29,7 @@
     "url" : "http://localhost:8085/message-queue-manager/api/message/{queueName}",
     "method" : "DELETE",
     "pathParams" : {
-      "queueName" : null
+      "queueName" : "sample"
     },
     "headers" : {
       "Authorization" : null,
@@ -51,7 +51,7 @@
     "url" : "http://localhost:8085/message-queue-manager/api/messages/{queueName}",
     "method" : "GET",
     "pathParams" : {
-      "queueName" : null
+      "queueName" : "sample"
     },
     "headers" : {
       "Authorization" : null,
@@ -73,9 +73,9 @@
     "url" : "http://localhost:8085/message-queue-manager/api/messages/{queueName}/{page}/{pageSize}",
     "method" : "GET",
     "pathParams" : {
-      "queueName" : null,
-      "page" : null,
-      "pageSize" : null
+      "queueName" : "sample",
+      "page" : 1,
+      "pageSize" : 10
     },
     "headers" : {
       "Authorization" : null,
@@ -97,7 +97,7 @@
     "url" : "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
     "method" : "DELETE",
     "pathParams" : {
-      "queueName" : null
+      "queueName" : "sample"
     },
     "headers" : {
       "Authorization" : null,
