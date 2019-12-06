@@ -1,4 +1,4 @@
-package com.frmwrk.model;
+package com.panther.model;
 
 import java.util.Map;
 

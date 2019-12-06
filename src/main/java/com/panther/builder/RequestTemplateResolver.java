@@ -1,4 +1,4 @@
-package com.frmwrk;
+package com.panther.builder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -23,9 +23,9 @@ import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.frmwrk.model.RequestResponseTemplate;
-import com.frmwrk.model.RequestTemplate;
-import com.frmwrk.model.ResponseTemplate;
+import com.panther.model.RequestResponseTemplate;
+import com.panther.model.RequestTemplate;
+import com.panther.model.ResponseTemplate;
 
 public class RequestTemplateResolver {
 

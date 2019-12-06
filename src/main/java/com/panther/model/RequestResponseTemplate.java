@@ -1,4 +1,4 @@
-package com.frmwrk.model;
+package com.panther.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

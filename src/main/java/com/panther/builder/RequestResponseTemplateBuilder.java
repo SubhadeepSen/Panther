@@ -1,4 +1,4 @@
-package com.frmwrk;
+package com.panther.builder;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -13,9 +13,9 @@ import java.util.Map.Entry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.frmwrk.model.RequestResponseTemplate;
-import com.frmwrk.model.RequestTemplate;
-import com.frmwrk.model.ResponseTemplate;
+import com.panther.model.RequestResponseTemplate;
+import com.panther.model.RequestTemplate;
+import com.panther.model.ResponseTemplate;
 
 import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
