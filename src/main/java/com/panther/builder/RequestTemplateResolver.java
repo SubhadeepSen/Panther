@@ -41,21 +41,26 @@ public class RequestTemplateResolver {
 	public List<RequestResponseTemplate> buildRequestObjects(String pathOfRequestTemplate) {
 		List<RequestResponseTemplate> requestResponseTemplate = readFromTemplate(pathOfRequestTemplate);
 
-		// TODO: throwing exception, need to check
-		/*
-		 * for (RequestResponseTemplate template : requestResponseTemplate) { if (null
-		 * != template.getRequest().getPathParams()) {
-		 * template.getRequest().getPathParams().entrySet().forEach(e -> { String url =
-		 * template.getRequest().getUrl(); if (url.contains("{" + e.getKey() + "}")) {
-		 * url = url.replace("{" + e.getKey() + "}", e.getValue());
-		 * template.getRequest().setUrl(url); } }); } if (null !=
-		 * template.getRequest().getQueryParams()) {
-		 * template.getRequest().getQueryParams().entrySet().forEach(e -> { String url =
-		 * template.getRequest().getUrl(); if (url.contains("{" + e.getKey() + "}")) {
-		 * url = url.replace("{" + e.getKey() + "}", e.getValue());
-		 * template.getRequest().setUrl(url); } }); } }
-		 */
-		//
+		for (RequestResponseTemplate template : requestResponseTemplate) {
+			if (null != template.getRequest().getPathParams()) {
+				template.getRequest().getPathParams().entrySet().forEach(e -> {
+					String url = template.getRequest().getUrl();
+					if (url.contains("{" + e.getKey() + "}") && null != e.getValue()) {
+						url = url.replace("{" + e.getKey() + "}", e.getValue());
+						template.getRequest().setUrl(url);
+					}
+				});
+			}
+			if (null != template.getRequest().getQueryParams()) {
+				template.getRequest().getQueryParams().entrySet().forEach(e -> {
+					String url = template.getRequest().getUrl();
+					if (url.contains("{" + e.getKey() + "}") && null != e.getValue()) {
+						url = url.replace("{" + e.getKey() + "}", e.getValue());
+						template.getRequest().setUrl(url);
+					}
+				});
+			}
+		}
 		return requestResponseTemplate;
 	}
 
@@ -124,6 +129,7 @@ public class RequestTemplateResolver {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
 		}
 	}
 
