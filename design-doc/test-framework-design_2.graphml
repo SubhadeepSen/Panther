@@ -68,7 +68,7 @@ Engine<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:Mod
           <y:Geometry height="97.40000000000003" width="113.0" x="264.0" y="401.29999999999995"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#008080" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="82.03515625" x="15.482421875" xml:space="preserve" y="31.998828125000017">Want to parse 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="82.03515625" x="15.482421875" xml:space="preserve" y="31.998828125000045">Want to parse 
 API Spec?<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="diamond"/>
         </y:ShapeNode>
@@ -98,7 +98,6 @@ API Spec?<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:
       </data>
     </node>
     <node id="n7">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="29.951043062200938" width="165.70824880382764" x="384.5104306220096" y="165.0"/>
@@ -124,30 +123,18 @@ covered (will be added)<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:
       </data>
     </node>
     <node id="n9">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="225.1306283891547" width="165.70824880382764" x="-82.85412440191382" y="28.79534290271131"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#999999" verticalTextPosition="bottom" visible="true" width="121.421875" x="-1.1776357631328551" xml:space="preserve" y="-20.376937593191087">config.json
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="121.609375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#999999" verticalTextPosition="bottom" visible="true" width="132.4375" x="-1.2844731345147409" xml:space="preserve" y="-8.746318047596887">config.json
 ---------------------------
 {
-    api_spec_location,
-    want_to_parse,
-    template_location,
-    aws_auth_enable,
-    scheme,
-    aws_auth_cred: {
-        accessKey,
-        secretKey,
-    },
-    basic_auth_enable,
-    basic_auth_cred: {
-        username,
-        password,
-        auth_header
-    }
+  "apiDocsLocation": " ",
+  "wantToParse": false,
+  "templateLocation": " ",
+  "apiScheme": " "
 }
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="-0.490301288271715" labelRatioY="-0.4280785872997302" nodeRatioX="-0.5" nodeRatioY="-0.5" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
@@ -237,7 +224,6 @@ new test cases can be added)<y:PreferredPlacementDescriptor angle="0.0" angleOff
       </data>
     </edge>
     <edge id="e6" source="n0" target="n10">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -248,7 +234,6 @@ new test cases can be added)<y:PreferredPlacementDescriptor angle="0.0" angleOff
       </data>
     </edge>
     <edge id="e7" source="n10" target="n4">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="-30.0"/>
@@ -260,7 +245,6 @@ new test cases can be added)<y:PreferredPlacementDescriptor angle="0.0" angleOff
       </data>
     </edge>
     <edge id="e8" source="n10" target="n6">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
