@@ -1,6 +1,5 @@
 [ {
   "description" : "Publish Message To Queue",
-  "authToken": "Basic cXVldWUtbWFuYWdlcjpxdWV1ZU1hbmFnZXJAMTIzNDU=",
   "request" : {
     "url" : "http://localhost:8085/message-queue-manager/api/message",
     "method" : "POST",

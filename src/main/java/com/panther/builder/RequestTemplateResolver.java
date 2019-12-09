@@ -23,22 +23,19 @@ import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.panther.init.ConfigLoader;
 import com.panther.model.RequestResponseTemplate;
 import com.panther.model.RequestTemplate;
 import com.panther.model.ResponseTemplate;
 
 public class RequestTemplateResolver {
 
-	public static void main(String[] args) throws IOException {
-		RequestTemplateResolver resolver = new RequestTemplateResolver();
-		List<RequestResponseTemplate> build = resolver.buildRequestObjects("request-response-template.json");
-
-		build.forEach(r -> System.out.println(r.getDescription() + " ==> " + r.getRequest().getUrl()));
-
-		resolver.makeHttpCalls(build);
-	}
-
 	public List<RequestResponseTemplate> buildRequestObjects(String pathOfRequestTemplate) {
+
+		if (null == pathOfRequestTemplate || pathOfRequestTemplate == "") {
+			System.err.println("invalid location input/output location: throw exception...");
+		}
+
 		List<RequestResponseTemplate> requestResponseTemplate = readFromTemplate(pathOfRequestTemplate);
 
 		for (RequestResponseTemplate template : requestResponseTemplate) {
@@ -75,7 +72,7 @@ public class RequestTemplateResolver {
 		return new ArrayList<RequestResponseTemplate>();
 	}
 
-	private void makeHttpCalls(List<RequestResponseTemplate> requestResponseTemplate)
+	public void makeHttpCalls(List<RequestResponseTemplate> requestResponseTemplate)
 			throws UnsupportedEncodingException {
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		RequestTemplate requestTemplate = null;
@@ -112,15 +109,16 @@ public class RequestTemplateResolver {
 			}
 
 			for (Entry<String, String> headerEntrySet : requestTemplate.getHeaders().entrySet()) {
-				if (headerEntrySet.getKey().equals("Authorization") && null != template.getAuthToken()) {
-					baseRequest.addHeader(headerEntrySet.getKey(), template.getAuthToken());
-				} else {
+				if (null != headerEntrySet.getValue() && "".equals(headerEntrySet.getValue())) {
 					baseRequest.addHeader(headerEntrySet.getKey(), headerEntrySet.getValue());
 				}
-
+			}
+			for (Entry<String, String> entry : ConfigLoader.getConfig(null).getCredHeaders().entrySet()) {
+				baseRequest.addHeader(entry.getKey(), entry.getValue());
 			}
 
 			try {
+				System.out.println("Executing: " + template.getDescription() + " at " + template.getRequest().getUrl());
 				long startTime = System.currentTimeMillis();
 				HttpResponse httpResponse = httpClient.execute(baseRequest);
 				verifyResponse(httpResponse, template.getResponse());
@@ -129,7 +127,7 @@ public class RequestTemplateResolver {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
+			System.out.println();
 		}
 	}
 

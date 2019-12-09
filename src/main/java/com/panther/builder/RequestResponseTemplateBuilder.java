@@ -10,9 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.http.ParseException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.panther.init.ConfigLoader;
 import com.panther.model.RequestResponseTemplate;
 import com.panther.model.RequestTemplate;
 import com.panther.model.ResponseTemplate;
@@ -36,15 +43,9 @@ import io.swagger.parser.SwaggerParser;
 
 public class RequestResponseTemplateBuilder {
 
-	public static void main(String[] args) {
-		new RequestResponseTemplateBuilder().writeToJsonFile("resource/api-docs.json", "");
-	}
-
 	public void writeToJsonFile(String pathOfApiSpecification, String outputPath) {
-		if (null == outputPath || outputPath == "") {
-			outputPath = "request-response-template.json";
-		} else {
-			outputPath = outputPath + "/request-response-template.json";
+		if (null == pathOfApiSpecification || null == outputPath || outputPath == "" || pathOfApiSpecification == "") {
+			System.err.println("invalid location input/output location: throw exception...");
 		}
 		List<RequestResponseTemplate> build = build(pathOfApiSpecification);
 		String jsonString = toJson(build);
@@ -60,9 +61,22 @@ public class RequestResponseTemplateBuilder {
 		RequestResponseTemplate requestResponseTemplate = null;
 		RequestTemplate requestTemplate = null;
 		ResponseTemplate responseTemplate = null;
+		Swagger swagger = null;
 
-		Swagger swagger = new SwaggerParser().read(pathOfApiSpecification);
-		String baseUrl = "http://" + swagger.getHost() + swagger.getBasePath();
+		if (pathOfApiSpecification.startsWith("http")) {
+			HttpClient httpClient = HttpClientBuilder.create().build();
+			try {
+				String swaggerDefinition = EntityUtils
+						.toString(httpClient.execute(new HttpGet(pathOfApiSpecification)).getEntity());
+				swagger = new SwaggerParser().read(new ObjectMapper().readTree(swaggerDefinition));
+			} catch (ParseException | IOException e) {
+				System.err.println("handle exception here");
+			}
+		} else {
+			swagger = new SwaggerParser().read(pathOfApiSpecification);
+		}
+
+		String baseUrl = ConfigLoader.getConfig(null).getApiScheme() + swagger.getHost() + swagger.getBasePath();
 
 		for (Entry<String, Path> pathEntrySet : swagger.getPaths().entrySet()) {
 			requestResponseTemplate = new RequestResponseTemplate();

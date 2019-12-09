@@ -1,13 +1,8 @@
 package com.panther.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 public class RequestResponseTemplate {
 
 	private String description;
-	@JsonInclude(Include.NON_NULL)
-	private String authToken;
 	private RequestTemplate request;
 	private ResponseTemplate response;
 
@@ -17,14 +12,6 @@ public class RequestResponseTemplate {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getAuthToken() {
-		return authToken;
-	}
-
-	public void setAuthToken(String authToken) {
-		this.authToken = authToken;
 	}
 
 	public RequestTemplate getRequest() {
