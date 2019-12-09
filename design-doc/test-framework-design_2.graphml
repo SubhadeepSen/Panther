@@ -125,10 +125,10 @@ covered (will be added)<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:
     <node id="n9">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="225.1306283891547" width="165.70824880382764" x="-82.85412440191382" y="28.79534290271131"/>
+          <y:Geometry height="117.17849059011161" width="137.98283636363624" x="81.00858181818185" y="120.41075470494421"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="121.609375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#999999" verticalTextPosition="bottom" visible="true" width="132.4375" x="-1.2844731345147409" xml:space="preserve" y="-8.746318047596887">config.json
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="121.609375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#999999" verticalTextPosition="bottom" visible="true" width="132.4375" x="-1.2844731345147409" xml:space="preserve" y="-8.746318047596858">config.json
 ---------------------------
 {
   "apiDocsLocation": " ",
