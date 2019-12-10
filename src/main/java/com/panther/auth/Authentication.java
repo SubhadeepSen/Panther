@@ -1,4 +1,4 @@
-package com.panther.init;
+package com.panther.auth;
 
 import java.util.TreeMap;
 

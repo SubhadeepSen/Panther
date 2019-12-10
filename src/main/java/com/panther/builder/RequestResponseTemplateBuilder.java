@@ -19,7 +19,7 @@ import org.apache.http.util.EntityUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.panther.init.ConfigLoader;
+import com.panther.config.ConfigLoader;
 import com.panther.model.RequestResponseTemplate;
 import com.panther.model.RequestTemplate;
 import com.panther.model.ResponseTemplate;

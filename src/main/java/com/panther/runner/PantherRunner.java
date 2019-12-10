@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.panther.auth.Authentication;
 import com.panther.builder.RequestResponseTemplateBuilder;
 import com.panther.builder.RequestTemplateResolver;
-import com.panther.init.Authentication;
-import com.panther.init.ConfigLoader;
+import com.panther.config.ConfigLoader;
 import com.panther.model.PantherConfig;
 import com.panther.model.RequestResponseTemplate;
 

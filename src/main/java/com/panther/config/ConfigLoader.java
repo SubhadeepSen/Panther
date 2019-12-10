@@ -1,4 +1,4 @@
-package com.panther.init;
+package com.panther.config;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.panther.auth.Authentication;
 import com.panther.model.PantherConfig;
 
 public class ConfigLoader {
