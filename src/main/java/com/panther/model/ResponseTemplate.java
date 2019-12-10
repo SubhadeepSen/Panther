@@ -51,5 +51,4 @@ public class ResponseTemplate {
 	public void setResponseTime(String responseTime) {
 		this.responseTime = responseTime;
 	}
-
 }

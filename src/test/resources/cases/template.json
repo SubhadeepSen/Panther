@@ -4,9 +4,9 @@
     "url" : "http://localhost:8085/message-queue-manager/api/message",
     "method" : "POST",
     "body" : {
-      "queueName" : "string",
-      "messageId" : "string",
-      "message" : "string"
+      "queueName" : "sample",
+      "messageId" : "",
+      "message" : "this is a test message"
     },
     "headers" : {
       "Authorization" : null,
@@ -15,36 +15,14 @@
     }
   },
   "response" : {
-    "status" : "200",
+    "status" : "406",
     "body" : {
-      "queueName" : "string",
-      "messageId" : "string",
-      "message" : "string"
-    }
+	  "message": "Duplicate message : this is a test message",
+	  "errorCode": "701"
+	}
   }
-}, {
-  "description" : "Consume Message From Queue",
-  "request" : {
-    "url" : "http://localhost:8085/message-queue-manager/api/message/{queueName}",
-    "method" : "DELETE",
-    "pathParams" : {
-      "queueName" : "sample"
-    },
-    "headers" : {
-      "Authorization" : null,
-      "Accept" : "application/json",
-      "Content-Type" : "application/json"
-    }
-  },
-  "response" : {
-    "status" : "200",
-    "body" : {
-      "queueName" : "string",
-      "messageId" : "string",
-      "message" : "string"
-    }
-  }
-}, {
+},
+{
   "description" : "Retreive Messages From Queue",
   "request" : {
     "url" : "http://localhost:8085/message-queue-manager/api/messages/{queueName}",
@@ -61,9 +39,9 @@
   "response" : {
     "status" : "200",
     "body" : [ {
-      "queueName" : "string",
-      "messageId" : "string",
-      "message" : "string"
+      "queueName" : "sample",
+      "messageId" : "1",
+      "message" : "this is a test message"
     } ]
   }
 }, {
@@ -84,33 +62,10 @@
   },
   "response" : {
     "status" : "200",
-    "body" : [ {
-      "queueName" : "string",
-      "messageId" : "string",
-      "message" : "string"
-    } ]
+    "body" : [ ]
   }
-}, {
-  "description" : "Delete Queue",
-  "request" : {
-    "url" : "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
-    "method" : "DELETE",
-    "pathParams" : {
-      "queueName" : "sample"
-    },
-    "headers" : {
-      "Authorization" : null,
-      "Accept" : "application/json",
-      "Content-Type" : "application/json"
-    }
-  },
-  "response" : {
-    "status" : "200",
-    "body" : {
-      "type" : "boolean"
-    }
-  }
-}, {
+}, 
+{
   "description" : "Retrieve All Message Queues",
   "request" : {
     "url" : "http://localhost:8085/message-queue-manager/api/queues",
@@ -124,8 +79,8 @@
   "response" : {
     "status" : "200",
     "body" : [ {
-      "queueId" : "string",
-      "queueName" : "string"
+      "queueId" : "2",
+      "queueName" : "sample"
     } ]
   }
 } ]

@@ -1,6 +1,7 @@
 {
 	"apiDocsLocation": "http://localhost:8085/message-queue-manager/api/v2/api-docs",
 	"wantToParse": false,
-	"templateLocation": "src/test/resources/template.json",
-	"apiScheme": "https"
+	"templateLocation": "src/test/resources/cases",
+	"apiScheme": "https",
+	"payloadLocation": "src/test/resources/payloads"
 }

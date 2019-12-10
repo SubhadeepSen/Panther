@@ -2,6 +2,7 @@ package com.panther.runner;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import com.panther.builder.RequestResponseTemplateBuilder;
@@ -21,6 +22,7 @@ public class PantherRunner {
 
 	public void executeTests(Authentication authentication) {
 		PantherConfig pantherConfig = ConfigLoader.getConfig(authentication);
+		Map<String, List<RequestResponseTemplate>> map = null;
 
 		if (pantherConfig.wantToParse()) {
 			new RequestResponseTemplateBuilder().writeToJsonFile(pantherConfig.getApiDocsLocation(),
@@ -28,16 +30,18 @@ public class PantherRunner {
 		} else if (!pantherConfig.wantToParse() && pantherConfig.getTemplateLocation() != null
 				&& pantherConfig.getTemplateLocation() != "") {
 			RequestTemplateResolver resolver = new RequestTemplateResolver();
-			List<RequestResponseTemplate> build = resolver.buildRequestObjects(pantherConfig.getTemplateLocation());
-			try {
-				resolver.makeHttpCalls(build);
-			} catch (UnsupportedEncodingException e) {
-				System.err.println("handle exception here....");
-			}
+			map = resolver.buildRequestObjects(pantherConfig.getTemplateLocation());
+			map.entrySet().forEach(entry -> {
+				try {
+					System.out.println(">>>>>> " + entry.getKey());
+					resolver.makeHttpCalls(entry.getValue());
+				} catch (UnsupportedEncodingException e) {
+					System.err.println("handle exception here....");
+				}
+			});
 		} else {
 			// TODO: throw exception
 		}
-
 	}
 
 }

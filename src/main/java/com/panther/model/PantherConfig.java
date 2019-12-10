@@ -7,6 +7,7 @@ public class PantherConfig {
 	private boolean wantToParse;
 	private String templateLocation;
 	private String apiScheme;
+	private String payloadLocation;
 	private TreeMap<String, String> credHeaders;
 
 	public String getApiDocsLocation() {
@@ -41,6 +42,14 @@ public class PantherConfig {
 		this.apiScheme = apiScheme;
 	}
 
+	public String getPayloadLocation() {
+		return payloadLocation;
+	}
+
+	public void setPayloadLocation(String payloadLocation) {
+		this.payloadLocation = payloadLocation;
+	}
+
 	public TreeMap<String, String> getCredHeaders() {
 		return credHeaders;
 	}
@@ -48,4 +57,5 @@ public class PantherConfig {
 	public void setCredHeaders(TreeMap<String, String> credHeaders) {
 		this.credHeaders = credHeaders;
 	}
+
 }
