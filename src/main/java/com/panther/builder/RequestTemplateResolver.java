@@ -151,7 +151,7 @@ public class RequestTemplateResolver {
 					baseRequest.addHeader(headerEntrySet.getKey(), headerEntrySet.getValue());
 				}
 			}
-			for (Entry<String, String> entry : ConfigLoader.getConfig(null).getCredHeaders().entrySet()) {
+			for (Entry<String, String> entry : ConfigLoader.getConfig(null).getSecureHeaders().entrySet()) {
 				baseRequest.addHeader(entry.getKey(), entry.getValue());
 			}
 
@@ -217,7 +217,8 @@ public class RequestTemplateResolver {
 	private JsonNode loadAndGetBody(String fileName) {
 		String payloadLocation = ConfigLoader.getConfig(null).getPayloadLocation();
 		if (null == payloadLocation || "".equals(payloadLocation)) {
-			throw new PantherException("Invalid payload location > " + payloadLocation + ", add location in panther-config.json.");
+			throw new PantherException(
+					"Invalid payload location > " + payloadLocation + ", add location in panther-config.json.");
 		}
 		String payloadPath = payloadLocation + "/" + fileName;
 		try {

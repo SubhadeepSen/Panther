@@ -2,13 +2,16 @@ package com.panther.model;
 
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class PantherConfig {
 	private String apiDocsLocation;
 	private boolean wantToParse;
-	private String templateLocation;
+	private String testCasesLocation;
 	private String apiScheme;
 	private String payloadLocation;
-	private TreeMap<String, String> credHeaders;
+	@JsonIgnore
+	private TreeMap<String, String> secureHeaders;
 
 	public String getApiDocsLocation() {
 		return apiDocsLocation;
@@ -26,12 +29,12 @@ public class PantherConfig {
 		this.wantToParse = wantToParse;
 	}
 
-	public String getTemplateLocation() {
-		return templateLocation;
+	public String getTestCasesLocation() {
+		return testCasesLocation;
 	}
 
-	public void setTemplateLocation(String templateLocation) {
-		this.templateLocation = templateLocation;
+	public void setTestCasesLocation(String testCasesLocation) {
+		this.testCasesLocation = testCasesLocation;
 	}
 
 	public String getApiScheme() {
@@ -50,12 +53,11 @@ public class PantherConfig {
 		this.payloadLocation = payloadLocation;
 	}
 
-	public TreeMap<String, String> getCredHeaders() {
-		return credHeaders;
+	public TreeMap<String, String> getSecureHeaders() {
+		return secureHeaders;
 	}
 
-	public void setCredHeaders(TreeMap<String, String> credHeaders) {
-		this.credHeaders = credHeaders;
+	public void setSecureHeaders(TreeMap<String, String> secureHeaders) {
+		this.secureHeaders = secureHeaders;
 	}
-
 }

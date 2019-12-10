@@ -26,11 +26,11 @@ public class PantherRunner {
 
 		if (pantherConfig.wantToParse()) {
 			new RequestResponseTemplateBuilder().writeToJsonFile(pantherConfig.getApiDocsLocation(),
-					pantherConfig.getTemplateLocation());
-		} else if (!pantherConfig.wantToParse() && pantherConfig.getTemplateLocation() != null
-				&& pantherConfig.getTemplateLocation() != "") {
+					pantherConfig.getTestCasesLocation());
+		} else if (!pantherConfig.wantToParse() && pantherConfig.getTestCasesLocation() != null
+				&& pantherConfig.getTestCasesLocation() != "") {
 			RequestTemplateResolver resolver = new RequestTemplateResolver();
-			map = resolver.buildRequestObjects(pantherConfig.getTemplateLocation());
+			map = resolver.buildRequestObjects(pantherConfig.getTestCasesLocation());
 			map.entrySet().forEach(entry -> {
 				try {
 					System.out.println(">>>>>> " + entry.getKey());
