@@ -28,19 +28,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panther.config.ConfigLoader;
 import com.panther.exception.PantherException;
-import com.panther.model.RequestResponseTemplate;
-import com.panther.model.RequestTemplate;
-import com.panther.model.ResponseTemplate;
+import com.panther.model.PantherModel;
+import com.panther.model.PantherRequest;
+import com.panther.model.PantherResponse;
 
 public class RequestTemplateResolver {
 
-	public Map<String, List<RequestResponseTemplate>> buildRequestObjects(String pathOfRequestTemplate) {
+	public Map<String, List<PantherModel>> buildRequestObjects(String pathOfRequestTemplate) {
 
 		if (null == pathOfRequestTemplate || pathOfRequestTemplate == "") {
 			throw new PantherException("Invalid path for test cases > " + pathOfRequestTemplate);
 		}
 
-		Map<String, List<RequestResponseTemplate>> map = new HashMap<>();
+		Map<String, List<PantherModel>> map = new HashMap<>();
 		try {
 			Files.list(Paths.get(pathOfRequestTemplate)).forEach(c -> {
 				String fileName = c.getFileName().toString();
@@ -50,12 +50,12 @@ public class RequestTemplateResolver {
 			throw new PantherException(e.getMessage());
 		}
 
-		RequestTemplate requestTemplate = null;
-		ResponseTemplate responseTemplate = null;
+		PantherRequest requestTemplate = null;
+		PantherResponse responseTemplate = null;
 		String bodyLocation = "";
 		String fileName = "";
-		for (Entry<String, List<RequestResponseTemplate>> entry : map.entrySet()) {
-			for (RequestResponseTemplate template : entry.getValue()) {
+		for (Entry<String, List<PantherModel>> entry : map.entrySet()) {
+			for (PantherModel template : entry.getValue()) {
 				requestTemplate = template.getRequest();
 				if (requestTemplate.getBody() != null) {
 					bodyLocation = requestTemplate.getBody().textValue();
@@ -100,22 +100,22 @@ public class RequestTemplateResolver {
 		return map;
 	}
 
-	private List<RequestResponseTemplate> readFromTemplate(String pathOfRequestTemplate) {
+	private List<PantherModel> readFromTemplate(String pathOfRequestTemplate) {
 		try {
 			return new ObjectMapper().readValue(Files.readAllBytes(Paths.get(pathOfRequestTemplate)),
-					new TypeReference<List<RequestResponseTemplate>>() {
+					new TypeReference<List<PantherModel>>() {
 					});
 		} catch (IOException e) {
 			throw new PantherException(e.getMessage());
 		}
 	}
 
-	public void makeHttpCalls(List<RequestResponseTemplate> requestResponseTemplate)
+	public void makeHttpCalls(List<PantherModel> requestResponseTemplate)
 			throws UnsupportedEncodingException {
 		HttpClient httpClient = HttpClientBuilder.create().build();
-		RequestTemplate requestTemplate = null;
+		PantherRequest requestTemplate = null;
 		HttpRequestBase baseRequest = null;
-		for (RequestResponseTemplate template : requestResponseTemplate) {
+		for (PantherModel template : requestResponseTemplate) {
 			requestTemplate = template.getRequest();
 			switch (requestTemplate.getMethod()) {
 			case "GET":
@@ -169,9 +169,9 @@ public class RequestTemplateResolver {
 		}
 	}
 
-	private void verifyResponse(HttpResponse httpResponse, RequestResponseTemplate requestResponseTemplate)
+	private void verifyResponse(HttpResponse httpResponse, PantherModel requestResponseTemplate)
 			throws ParseException, IOException {
-		ResponseTemplate responseTemplate = requestResponseTemplate.getResponse();
+		PantherResponse responseTemplate = requestResponseTemplate.getResponse();
 
 		// status code verification
 		String statusCode = String.valueOf(httpResponse.getStatusLine().getStatusCode());

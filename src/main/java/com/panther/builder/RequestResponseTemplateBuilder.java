@@ -20,9 +20,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panther.config.ConfigLoader;
-import com.panther.model.RequestResponseTemplate;
-import com.panther.model.RequestTemplate;
-import com.panther.model.ResponseTemplate;
+import com.panther.model.PantherModel;
+import com.panther.model.PantherRequest;
+import com.panther.model.PantherResponse;
 
 import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
@@ -47,7 +47,7 @@ public class RequestResponseTemplateBuilder {
 		if (null == pathOfApiSpecification || null == outputPath || outputPath == "" || pathOfApiSpecification == "") {
 			System.err.println("invalid location input/output location: throw exception...");
 		}
-		List<RequestResponseTemplate> build = build(pathOfApiSpecification);
+		List<PantherModel> build = build(pathOfApiSpecification);
 		String jsonString = toJson(build);
 		try (FileWriter writer = new FileWriter(outputPath); BufferedWriter bw = new BufferedWriter(writer)) {
 			bw.write(jsonString);
@@ -56,11 +56,11 @@ public class RequestResponseTemplateBuilder {
 		}
 	}
 
-	public List<RequestResponseTemplate> build(String pathOfApiSpecification) {
-		List<RequestResponseTemplate> requests = new ArrayList<>();
-		RequestResponseTemplate requestResponseTemplate = null;
-		RequestTemplate requestTemplate = null;
-		ResponseTemplate responseTemplate = null;
+	public List<PantherModel> build(String pathOfApiSpecification) {
+		List<PantherModel> requests = new ArrayList<>();
+		PantherModel requestResponseTemplate = null;
+		PantherRequest requestTemplate = null;
+		PantherResponse responseTemplate = null;
 		Swagger swagger = null;
 
 		if (pathOfApiSpecification.startsWith("http")) {
@@ -79,9 +79,9 @@ public class RequestResponseTemplateBuilder {
 		String baseUrl = ConfigLoader.getConfig(null).getApiScheme() + swagger.getHost() + swagger.getBasePath();
 
 		for (Entry<String, Path> pathEntrySet : swagger.getPaths().entrySet()) {
-			requestResponseTemplate = new RequestResponseTemplate();
-			requestTemplate = new RequestTemplate();
-			responseTemplate = new ResponseTemplate();
+			requestResponseTemplate = new PantherModel();
+			requestTemplate = new PantherRequest();
+			responseTemplate = new PantherResponse();
 			requestTemplate.setUrl(baseUrl + pathEntrySet.getKey());
 			for (Entry<HttpMethod, Operation> operationEntrySet : pathEntrySet.getValue().getOperationMap()
 					.entrySet()) {
@@ -99,7 +99,7 @@ public class RequestResponseTemplateBuilder {
 		return requests;
 	}
 
-	private void createRequestTemplate(Swagger swagger, RequestTemplate requestTemplate, List<Parameter> parameters) {
+	private void createRequestTemplate(Swagger swagger, PantherRequest requestTemplate, List<Parameter> parameters) {
 		Map<String, String> pathParams = new LinkedHashMap<String, String>();
 		Map<String, String> queryParams = new LinkedHashMap<String, String>();
 		Map<String, String> headers = new LinkedHashMap<String, String>();
@@ -126,7 +126,7 @@ public class RequestResponseTemplateBuilder {
 		requestTemplate.setHeaders(headers);
 	}
 
-	private void createResponseTemplate(Swagger swagger, ResponseTemplate responseTemplate,
+	private void createResponseTemplate(Swagger swagger, PantherResponse responseTemplate,
 			Map<String, Response> responses) {
 		String[] definitionKey = null;
 		Model model;

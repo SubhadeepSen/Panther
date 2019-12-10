@@ -1,10 +1,10 @@
 package com.panther.model;
 
-public class RequestResponseTemplate {
+public class PantherModel {
 
 	private String description;
-	private RequestTemplate request;
-	private ResponseTemplate response;
+	private PantherRequest request;
+	private PantherResponse response;
 	private boolean caseStatus;
 	private String caseMessage;
 
@@ -16,19 +16,19 @@ public class RequestResponseTemplate {
 		this.description = description;
 	}
 
-	public RequestTemplate getRequest() {
+	public PantherRequest getRequest() {
 		return request;
 	}
 
-	public void setRequest(RequestTemplate request) {
+	public void setRequest(PantherRequest request) {
 		this.request = request;
 	}
 
-	public ResponseTemplate getResponse() {
+	public PantherResponse getResponse() {
 		return response;
 	}
 
-	public void setResponse(ResponseTemplate response) {
+	public void setResponse(PantherResponse response) {
 		this.response = response;
 	}
 

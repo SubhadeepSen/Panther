@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class RequestTemplate {
+public class PantherRequest {
 	@JsonInclude(Include.NON_NULL)
 	private String description;
 

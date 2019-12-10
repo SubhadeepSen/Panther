@@ -10,7 +10,7 @@ import com.panther.builder.RequestResponseTemplateBuilder;
 import com.panther.builder.RequestTemplateResolver;
 import com.panther.config.ConfigLoader;
 import com.panther.model.PantherConfig;
-import com.panther.model.RequestResponseTemplate;
+import com.panther.model.PantherModel;
 
 public class PantherRunner {
 
@@ -22,7 +22,7 @@ public class PantherRunner {
 
 	public void executeTests(Authentication authentication) {
 		PantherConfig pantherConfig = ConfigLoader.getConfig(authentication);
-		Map<String, List<RequestResponseTemplate>> map = null;
+		Map<String, List<PantherModel>> map = null;
 
 		if (pantherConfig.wantToParse()) {
 			new RequestResponseTemplateBuilder().writeToJsonFile(pantherConfig.getApiDocsLocation(),
