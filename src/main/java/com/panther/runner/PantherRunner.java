@@ -17,9 +17,10 @@ import org.junit.runners.model.InitializationError;
 
 import com.panther.auth.Auth;
 import com.panther.auth.Authentication;
-import com.panther.builder.RequestResponseTemplateBuilder;
-import com.panther.builder.RequestTemplateResolver;
 import com.panther.config.ConfigLoader;
+import com.panther.core.PantherEngine;
+import com.panther.core.TemplateBuilder;
+import com.panther.core.TemplateResolver;
 import com.panther.exception.PantherException;
 import com.panther.model.PantherConfig;
 import com.panther.model.PantherModel;
@@ -44,43 +45,42 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		}
 		PantherConfig pantherConfig = ConfigLoader.getConfig(auth);
 		if (pantherConfig.wantToParse()) {
-			new RequestResponseTemplateBuilder().writeToJsonFile(pantherConfig.getApiDocsLocation(),
+			new TemplateBuilder().writeToJsonFile(pantherConfig.getApiDocsLocation(),
 					pantherConfig.getTestCasesLocation());
 		} else if (!pantherConfig.wantToParse() && pantherConfig.getTestCasesLocation() != null
 				&& pantherConfig.getTestCasesLocation() != "") {
-			RequestTemplateResolver resolver = new RequestTemplateResolver();
-			map = resolver.buildRequestObjects(pantherConfig.getTestCasesLocation());
+			map = new TemplateResolver().resolve(pantherConfig.getTestCasesLocation());
 		}
 	}
 
 	@Override
 	protected List<PantherModel> getChildren() {
-		List<PantherModel> list = new ArrayList<PantherModel>();
+		List<PantherModel> pantherModels = new ArrayList<PantherModel>();
 		map.entrySet().forEach(e -> {
-			list.addAll(e.getValue());
+			pantherModels.addAll(e.getValue());
 		});
-		return list;
+		return pantherModels;
 	}
 
 	@Override
-	protected Description describeChild(PantherModel child) {
-		return Description.createSuiteDescription(child.getDescription());
+	protected Description describeChild(PantherModel pantherModel) {
+		return Description.createSuiteDescription(pantherModel.getDescription());
 	}
 
 	@Override
-	protected void runChild(PantherModel child, RunNotifier notifier) {
+	protected void runChild(PantherModel pantherModel, RunNotifier notifier) {
 		try {
-			notifier.fireTestStarted(Description.createSuiteDescription(child.getDescription()));
-			new RequestTemplateResolver().makeHttpCalls(child);
-			System.out.println(child.caseStatus() + " --> " + child.getCaseMessage());
-			if (!child.caseStatus()) {
-				notifier.fireTestFailure(new Failure(Description.createSuiteDescription(child.getDescription()),
-						new PantherException(child.getCaseMessage())));
+			notifier.fireTestStarted(Description.createSuiteDescription(pantherModel.getDescription()));
+			new PantherEngine().execute(pantherModel);
+			System.out.println(pantherModel.caseStatus() + " --> " + pantherModel.getCaseMessage());
+			if (!pantherModel.caseStatus()) {
+				notifier.fireTestFailure(new Failure(Description.createSuiteDescription(pantherModel.getDescription()),
+						new PantherException(pantherModel.getCaseMessage())));
 				return;
 			}
-			notifier.fireTestFinished(Description.createSuiteDescription(child.getDescription()));
+			notifier.fireTestFinished(Description.createSuiteDescription(pantherModel.getDescription()));
 		} catch (UnsupportedEncodingException | PantherException e) {
-			notifier.fireTestFailure(new Failure(Description.createSuiteDescription(child.getDescription()), e));
+			notifier.fireTestFailure(new Failure(Description.createSuiteDescription(pantherModel.getDescription()), e));
 		}
 	}
 

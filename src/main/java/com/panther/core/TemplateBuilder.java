@@ -1,4 +1,4 @@
-package com.panther.builder;
+package com.panther.core;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -41,7 +41,7 @@ import io.swagger.models.parameters.QueryParameter;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerParser;
 
-public class RequestResponseTemplateBuilder {
+public class TemplateBuilder {
 
 	public void writeToJsonFile(String pathOfApiSpecification, String outputPath) {
 		if (null == pathOfApiSpecification || null == outputPath || outputPath == "" || pathOfApiSpecification == "") {
