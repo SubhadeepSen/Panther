@@ -3,5 +3,6 @@
 	"wantToParse": false,
 	"testCasesLocation": "src/test/resources/cases",
 	"apiScheme": "https",
-	"payloadLocation": "src/test/resources/payloads"
+	"payloadLocation": "src/test/resources/payloads",
+	"enableReportLogging": false
 }

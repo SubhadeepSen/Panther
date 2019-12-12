@@ -20,7 +20,9 @@ public class ConfigLoader {
 				pantherConfig = new ObjectMapper().readValue(Files.readAllBytes(Paths.get(PANTHER_CONFIG_JSON)),
 						new TypeReference<PantherConfig>() {
 						});
-				pantherConfig.setSecureHeaders(authentication.headers());
+				if (null != authentication) {
+					pantherConfig.setSecureHeaders(authentication.headers());
+				}
 				return pantherConfig;
 			} catch (IOException e) {
 				throw new PantherException("Unable to load panther-config.json...");

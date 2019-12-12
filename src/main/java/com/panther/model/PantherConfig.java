@@ -10,6 +10,7 @@ public class PantherConfig {
 	private String testCasesLocation;
 	private String apiScheme;
 	private String payloadLocation;
+	private boolean enableReportLogging;
 	@JsonIgnore
 	private TreeMap<String, String> secureHeaders;
 
@@ -51,6 +52,14 @@ public class PantherConfig {
 
 	public void setPayloadLocation(String payloadLocation) {
 		this.payloadLocation = payloadLocation;
+	}
+
+	public boolean isEnableReportLogging() {
+		return enableReportLogging;
+	}
+
+	public void setEnableReportLogging(boolean enableReportLogging) {
+		this.enableReportLogging = enableReportLogging;
 	}
 
 	public TreeMap<String, String> getSecureHeaders() {
