@@ -23,6 +23,7 @@ import org.apache.http.util.EntityUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panther.config.ConfigLoader;
 import com.panther.exception.PantherException;
+import com.panther.model.PantherConfig;
 import com.panther.model.PantherModel;
 import com.panther.model.PantherRequest;
 import com.panther.model.PantherResponse;
@@ -67,8 +68,13 @@ public class PantherEngine {
 				baseRequest.addHeader(headerEntrySet.getKey(), headerEntrySet.getValue());
 			}
 		}
-		for (Entry<String, String> entry : ConfigLoader.getConfig(null).getSecureHeaders().entrySet()) {
-			baseRequest.addHeader(entry.getKey(), entry.getValue());
+		
+		PantherConfig pantherConfig = ConfigLoader.getConfig(null);
+		
+		if (null != pantherConfig.getSecureHeaders() && !pantherConfig.getSecureHeaders().isEmpty()) {
+			for (Entry<String, String> entry : ConfigLoader.getConfig(null).getSecureHeaders().entrySet()) {
+				baseRequest.addHeader(entry.getKey(), entry.getValue());
+			}
 		}
 
 		try {
