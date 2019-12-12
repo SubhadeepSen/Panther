@@ -110,63 +110,60 @@ public class RequestTemplateResolver {
 		}
 	}
 
-	public void makeHttpCalls(List<PantherModel> requestResponseTemplate)
-			throws UnsupportedEncodingException {
+	public void makeHttpCalls(PantherModel template) throws UnsupportedEncodingException {
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		PantherRequest requestTemplate = null;
 		HttpRequestBase baseRequest = null;
-		for (PantherModel template : requestResponseTemplate) {
-			requestTemplate = template.getRequest();
-			switch (requestTemplate.getMethod()) {
-			case "GET":
-				baseRequest = new HttpGet(requestTemplate.getUrl());
-				break;
-			case "POST":
-				baseRequest = new HttpPost(requestTemplate.getUrl());
-				if (null != requestTemplate.getBody()) {
-					HttpPost httpPost = (HttpPost) baseRequest;
-					httpPost.setEntity(new StringEntity(requestTemplate.getBody().toString()));
-					baseRequest = httpPost;
-				}
-				break;
-			case "PUT":
-				baseRequest = new HttpPut(requestTemplate.getUrl());
-				if (null != requestTemplate.getBody()) {
-					HttpPut httpPut = (HttpPut) baseRequest;
-					httpPut.setEntity(new StringEntity(requestTemplate.getBody().toString(),
-							ContentType.getByMimeType(requestTemplate.getHeaders().get("Accept"))));
-					baseRequest = httpPut;
-				}
-				break;
-			case "DELETE":
-				baseRequest = new HttpDelete(requestTemplate.getUrl());
-				break;
-			default:
-				System.out.println("Unsupported http method: " + requestTemplate.getMethod());
-				break;
+		requestTemplate = template.getRequest();
+		switch (requestTemplate.getMethod()) {
+		case "GET":
+			baseRequest = new HttpGet(requestTemplate.getUrl());
+			break;
+		case "POST":
+			baseRequest = new HttpPost(requestTemplate.getUrl());
+			if (null != requestTemplate.getBody()) {
+				HttpPost httpPost = (HttpPost) baseRequest;
+				httpPost.setEntity(new StringEntity(requestTemplate.getBody().toString()));
+				baseRequest = httpPost;
 			}
-
-			for (Entry<String, String> headerEntrySet : requestTemplate.getHeaders().entrySet()) {
-				if (null != headerEntrySet.getValue() && !"".equals(headerEntrySet.getValue())) {
-					baseRequest.addHeader(headerEntrySet.getKey(), headerEntrySet.getValue());
-				}
+			break;
+		case "PUT":
+			baseRequest = new HttpPut(requestTemplate.getUrl());
+			if (null != requestTemplate.getBody()) {
+				HttpPut httpPut = (HttpPut) baseRequest;
+				httpPut.setEntity(new StringEntity(requestTemplate.getBody().toString(),
+						ContentType.getByMimeType(requestTemplate.getHeaders().get("Accept"))));
+				baseRequest = httpPut;
 			}
-			for (Entry<String, String> entry : ConfigLoader.getConfig(null).getSecureHeaders().entrySet()) {
-				baseRequest.addHeader(entry.getKey(), entry.getValue());
-			}
-
-			try {
-				System.out.println("Executing: " + template.getDescription() + " at " + template.getRequest().getUrl());
-				long startTime = System.currentTimeMillis();
-				HttpResponse httpResponse = httpClient.execute(baseRequest);
-				verifyResponse(httpResponse, template);
-				long endTime = System.currentTimeMillis();
-				template.getResponse().setResponseTime(String.valueOf(endTime - startTime));
-			} catch (IOException e) {
-				throw new PantherException(e.getMessage());
-			}
-			System.out.println();
+			break;
+		case "DELETE":
+			baseRequest = new HttpDelete(requestTemplate.getUrl());
+			break;
+		default:
+			System.out.println("Unsupported http method: " + requestTemplate.getMethod());
+			break;
 		}
+
+		for (Entry<String, String> headerEntrySet : requestTemplate.getHeaders().entrySet()) {
+			if (null != headerEntrySet.getValue() && !"".equals(headerEntrySet.getValue())) {
+				baseRequest.addHeader(headerEntrySet.getKey(), headerEntrySet.getValue());
+			}
+		}
+		for (Entry<String, String> entry : ConfigLoader.getConfig(null).getSecureHeaders().entrySet()) {
+			baseRequest.addHeader(entry.getKey(), entry.getValue());
+		}
+
+		try {
+			System.out.println("Executing: " + template.getDescription() + " at " + template.getRequest().getUrl());
+			long startTime = System.currentTimeMillis();
+			HttpResponse httpResponse = httpClient.execute(baseRequest);
+			verifyResponse(httpResponse, template);
+			long endTime = System.currentTimeMillis();
+			template.getResponse().setResponseTime(String.valueOf(endTime - startTime));
+		} catch (IOException e) {
+			throw new PantherException(e.getMessage());
+		}
+		System.out.println();
 	}
 
 	private void verifyResponse(HttpResponse httpResponse, PantherModel requestResponseTemplate)

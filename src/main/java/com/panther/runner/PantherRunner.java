@@ -1,29 +1,48 @@
 package com.panther.runner;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Optional;
 
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.ParentRunner;
+import org.junit.runners.model.InitializationError;
+
+import com.panther.auth.Auth;
 import com.panther.auth.Authentication;
 import com.panther.builder.RequestResponseTemplateBuilder;
 import com.panther.builder.RequestTemplateResolver;
 import com.panther.config.ConfigLoader;
+import com.panther.exception.PantherException;
 import com.panther.model.PantherConfig;
 import com.panther.model.PantherModel;
 
-public class PantherRunner {
+public class PantherRunner extends ParentRunner<PantherModel> {
 
-	public static void main(String[] args) {
-		TreeMap<String, String> map = new TreeMap<String, String>();
-		map.put("Authorization", "Basic cXVldWUtbWFuYWdlcjpxdWV1ZU1hbmFnZXJAMTIzNDU=");
-		new PantherRunner().executeTests(() -> map);
-	}
+	private Map<String, List<PantherModel>> map;
 
-	public void executeTests(Authentication authentication) {
-		PantherConfig pantherConfig = ConfigLoader.getConfig(authentication);
-		Map<String, List<PantherModel>> map = null;
+	public PantherRunner(Class<?> testClass) throws InitializationError {
+		super(testClass);
 
+		Optional<Method> authMethod = Arrays.stream(testClass.getDeclaredMethods())
+				.filter(m -> m.isAnnotationPresent(Auth.class)).findFirst();
+		Authentication auth = null;
+		if (authMethod.isPresent()) {
+			try {
+				auth = (Authentication) authMethod.get().invoke(testClass.newInstance());
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| InstantiationException e) {
+				e.printStackTrace();
+			}
+		}
+		PantherConfig pantherConfig = ConfigLoader.getConfig(auth);
 		if (pantherConfig.wantToParse()) {
 			new RequestResponseTemplateBuilder().writeToJsonFile(pantherConfig.getApiDocsLocation(),
 					pantherConfig.getTestCasesLocation());
@@ -31,16 +50,37 @@ public class PantherRunner {
 				&& pantherConfig.getTestCasesLocation() != "") {
 			RequestTemplateResolver resolver = new RequestTemplateResolver();
 			map = resolver.buildRequestObjects(pantherConfig.getTestCasesLocation());
-			map.entrySet().forEach(entry -> {
-				try {
-					System.out.println(">>>>>> " + entry.getKey());
-					resolver.makeHttpCalls(entry.getValue());
-				} catch (UnsupportedEncodingException e) {
-					System.err.println("handle exception here....");
-				}
-			});
-		} else {
-			// TODO: throw exception
+		}
+	}
+
+	@Override
+	protected List<PantherModel> getChildren() {
+		List<PantherModel> list = new ArrayList<PantherModel>();
+		map.entrySet().forEach(e -> {
+			list.addAll(e.getValue());
+		});
+		return list;
+	}
+
+	@Override
+	protected Description describeChild(PantherModel child) {
+		return Description.createSuiteDescription(child.getDescription());
+	}
+
+	@Override
+	protected void runChild(PantherModel child, RunNotifier notifier) {
+		try {
+			notifier.fireTestStarted(Description.createSuiteDescription(child.getDescription()));
+			new RequestTemplateResolver().makeHttpCalls(child);
+			System.out.println(child.caseStatus() + " --> " + child.getCaseMessage());
+			if (!child.caseStatus()) {
+				notifier.fireTestFailure(new Failure(Description.createSuiteDescription(child.getDescription()),
+						new PantherException(child.getCaseMessage())));
+				return;
+			}
+			notifier.fireTestFinished(Description.createSuiteDescription(child.getDescription()));
+		} catch (UnsupportedEncodingException | PantherException e) {
+			notifier.fireTestFailure(new Failure(Description.createSuiteDescription(child.getDescription()), e));
 		}
 	}
 
