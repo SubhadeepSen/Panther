@@ -29,6 +29,8 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 
 	private Map<String, List<PantherModel>> map;
 
+	private int count = 0;
+
 	public PantherRunner(Class<?> testClass) throws InitializationError {
 		super(testClass);
 
@@ -59,6 +61,7 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		map.entrySet().forEach(e -> {
 			pantherModels.addAll(e.getValue());
 		});
+		count = pantherModels.size();
 		return pantherModels;
 	}
 
@@ -76,12 +79,17 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 			if (!pantherModel.caseStatus()) {
 				notifier.fireTestFailure(new Failure(Description.createSuiteDescription(pantherModel.getDescription()),
 						new PantherException(pantherModel.getCaseMessage())));
-				return;
 			}
-			notifier.fireTestFinished(Description.createSuiteDescription(pantherModel.getDescription()));
 		} catch (UnsupportedEncodingException | PantherException e) {
 			notifier.fireTestFailure(new Failure(Description.createSuiteDescription(pantherModel.getDescription()), e));
+		} finally {
+			notifier.fireTestFinished(Description.createSuiteDescription(pantherModel.getDescription()));
+			count--;
+		}
+
+		if (count == 0) {
+			// TODO: Build report
+			System.out.println("Building report.....");
 		}
 	}
-
 }
