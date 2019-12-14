@@ -29,12 +29,14 @@ import com.panther.model.PantherModel;
 public class PantherRunner extends ParentRunner<PantherModel> {
 
 	private Map<String, List<PantherModel>> fileNameToPantherList;
+	private long startTime = 0;
+	private long endTime = 0;
 
 	private int count = 0;
 
 	public PantherRunner(Class<?> testClass) throws InitializationError {
 		super(testClass);
-
+		startTime = System.currentTimeMillis();
 		Optional<Method> authMethod = Arrays.stream(testClass.getDeclaredMethods())
 				.filter(m -> m.isAnnotationPresent(Auth.class)).findFirst();
 		Authentication auth = null;
@@ -89,9 +91,9 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		}
 
 		if (count == 0) {
-			// TODO: Build report
-			System.out.println("Building report.....");
 			new PantherReport().build(fileNameToPantherList);
+			endTime = System.currentTimeMillis();
+			System.out.println("Execution completed in " + (((double) endTime - startTime) / 1000) + " secs.");
 		}
 	}
 }
