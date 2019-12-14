@@ -1,0 +1,14 @@
+<div class="panel-group" id="<<fileName>>" role="tablist" aria-multiselectable="true">
+<div class="panel left-border-1">
+<div class="panel-heading <<caseStatusColor>>" role="tab" id="<<fileName>>-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#<<fileName>>" href="#<<fileName>>-collapse" aria-expanded="true" aria-controls="<<fileName>>-collapse">
+<<fileName>> <span class="float-right"> <<passedCount>> / <<totalCount>></span>
+</a>
+</h4>
+</div>
+<div id="<<fileName>>-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<<fileName>>-heading">
+<<loadCase>>
+</div>
+</div>
+</div>

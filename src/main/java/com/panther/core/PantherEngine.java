@@ -68,9 +68,9 @@ public class PantherEngine {
 				baseRequest.addHeader(headerEntrySet.getKey(), headerEntrySet.getValue());
 			}
 		}
-		
+
 		PantherConfig pantherConfig = ConfigLoader.getConfig(null);
-		
+
 		if (null != pantherConfig.getSecureHeaders() && !pantherConfig.getSecureHeaders().isEmpty()) {
 			for (Entry<String, String> entry : ConfigLoader.getConfig(null).getSecureHeaders().entrySet()) {
 				baseRequest.addHeader(entry.getKey(), entry.getValue());
@@ -81,9 +81,11 @@ public class PantherEngine {
 			System.out.println("Executing: " + pantherModel.getDescription() + " at " + pantherModel.getRequest().getUrl());
 			long startTime = System.currentTimeMillis();
 			HttpResponse httpResponse = httpClient.execute(baseRequest);
-			verifyResponse(httpResponse, pantherModel);
 			long endTime = System.currentTimeMillis();
 			pantherModel.getResponse().setResponseTime(String.valueOf(endTime - startTime));
+			pantherModel.setActualResponse(httpResponse);
+			verifyResponse(httpResponse, pantherModel);
+
 		} catch (IOException e) {
 			throw new PantherException(e.getMessage());
 		}
@@ -110,7 +112,8 @@ public class PantherEngine {
 			String expectedResponse = pantherResponse.getBody().toString();
 			if (!new ObjectMapper().readTree(actualResponse).equals(pantherResponse.getBody())) {
 				pantherModel.setCaseStatus(false);
-				pantherModel.setCaseMessage("body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
+				pantherModel.setCaseMessage(
+						"body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
 				return;
 			}
 		}

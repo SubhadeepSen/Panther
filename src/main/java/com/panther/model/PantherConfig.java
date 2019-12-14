@@ -11,6 +11,7 @@ public class PantherConfig {
 	private String apiScheme;
 	private String payloadLocation;
 	private boolean enableReportLogging;
+	private String reportName;
 	@JsonIgnore
 	private TreeMap<String, String> secureHeaders;
 
@@ -68,5 +69,13 @@ public class PantherConfig {
 
 	public void setSecureHeaders(TreeMap<String, String> secureHeaders) {
 		this.secureHeaders = secureHeaders;
+	}
+
+	public String getReportName() {
+		return reportName;
+	}
+
+	public void setReportName(String reportName) {
+		this.reportName = reportName;
 	}
 }

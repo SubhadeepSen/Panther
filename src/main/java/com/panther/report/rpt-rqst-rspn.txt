@@ -1,0 +1,25 @@
+<div class="panel-group" id="<<rqst-rspn>>" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading <<caseStatusColor>>" role="tab" id="<<rqst-rspn>>-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#<<rqst-rspn>>" href="#<<rqst-rspn>>-collapse" aria-expanded="false" aria-controls="<<rqst-rspn>>-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="<<rqst-rspn>>-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<<rqst-rspn>>-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-6">
+<p class="center-align">Request</p>
+<p><<request-body>></p>
+</div>
+<div class="col-lg-6">
+<p class="center-align">Response</p>
+<p><<response-body>></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

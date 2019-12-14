@@ -4,5 +4,6 @@
 	"testCasesLocation": "src/test/resources/cases",
 	"apiScheme": "https",
 	"payloadLocation": "src/test/resources/payloads",
-	"enableReportLogging": false
+	"enableReportLogging": true,
+	"reportName": "Message Queue API"
 }

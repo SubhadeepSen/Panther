@@ -1,0 +1,19 @@
+<div class="panel-body">
+<div class="panel-group" id="<<description>>" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading <<caseStatusColor>>" role="tab" id="<<description>>-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#<<description>>" href="#<<description>>-collapse" aria-expanded="false" aria-controls="<<description>>-collapse">
+<<description>> <span class="float-right"><<caseStatus>> <<responseTime>></span>
+</a>
+</h4>
+</div>
+<div id="<<description>>-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<<description>>-heading">
+<div class="panel-body">
+<p><<errorMessage>></p>
+<<rpt-rqst-rspn>>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,4 @@
+<!DOCTYPE html> <html><head><title>Panther</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="css/bootstrap.min.css"><link rel="stylesheet" href="css/panther.css"><link rel="stylesheet" href="css/font-awesome.min.css"></head> <body class="container"><h1>
+<<appName>> Test Report</h1><div class="center-align margin-bottom-20"><canvas id="pie-report" width="400" height="300"></canvas></div> 
+<<rpt-body>>
+<script src="js/jquery.min.js"></script><script src="js/bootstrap.min.js"></script><script src='js/chart.min.js'></script><script src='js/panther.js'></script></body></html>
