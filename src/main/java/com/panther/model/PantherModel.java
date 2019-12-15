@@ -1,12 +1,17 @@
 package com.panther.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class PantherModel {
 
 	private String description;
 	private PantherRequest request;
 	private PantherResponse response;
+	@JsonIgnore
 	private boolean caseStatus;
+	@JsonIgnore
 	private String caseMessage;
+	@JsonIgnore
 	private String actualResponse = "";
 
 	public String getDescription() {
