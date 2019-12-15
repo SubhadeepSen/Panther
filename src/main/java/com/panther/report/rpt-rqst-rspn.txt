@@ -11,12 +11,12 @@ Request/Response
 <div class="panel-body">
 <div class="row">
 <div class="col-lg-6">
-<p class="center-align">Request</p>
-<p><<request-body>></p>
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color"><<request-body>></p>
 </div>
 <div class="col-lg-6">
-<p class="center-align">Response</p>
-<p><<response-body>></p>
+<p class="center-align bold-font">Response</p>
+<p class="log-background-color"><<response-body>></p>
 </div>
 </div>
 </div>

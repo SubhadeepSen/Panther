@@ -90,6 +90,16 @@ public class PantherReport {
 		for (String defLine : defLines) {
 			if (defLine.contains("<<appName>>")) {
 				sb.append(defLine.replaceAll("<<appName>>", ConfigLoader.getConfig(null).getReportName()));
+			} else if (defLine.contains("<<totalCount>>")) {
+				sb.append(defLine.replaceAll("<<totalCount>>", String.valueOf(totalPassed + totalFailed)));
+			} else if (defLine.contains("<<passedCount>>")) {
+				sb.append(defLine.replaceAll("<<passedCount>>", String.valueOf(totalPassed)));
+			} else if (defLine.contains("<<failedCount>>")) {
+				sb.append(defLine.replaceAll("<<failedCount>>", String.valueOf(totalFailed)));
+			} else if (defLine.contains("<<minResponseTime>>")) {
+				sb.append(defLine.replaceAll("<<minResponseTime>>", String.valueOf(minResponseTime)));
+			} else if (defLine.contains("<<maxResponseTime>>")) {
+				sb.append(defLine.replaceAll("<<maxResponseTime>>", String.valueOf(maxResponseTime)));
 			} else if (defLine.contains("<<rpt-body>>")) {
 				fileNameToPantherList.entrySet().forEach(entry -> {
 					try {
@@ -193,9 +203,9 @@ public class PantherReport {
 					line = line.replaceAll("<<caseStatusColor>>", "red-background");
 				}
 			}
-			//TODO: need to properly log request and response
+			// TODO: need to properly log request and response
 			if (line.contains("<<request-body>>")) {
-				line = line.replaceAll("<<request-body>>", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(model.getRequest()));
+				line = line.replaceAll("<<request-body>>", new ObjectMapper().writeValueAsString(model.getRequest()));
 			}
 			if (line.contains("<<response-body>>")) {
 				if (null != model.getResponse().getBody()) {

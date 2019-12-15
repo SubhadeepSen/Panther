@@ -10,7 +10,7 @@
 </div>
 <div id="<<description>>-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<<description>>-heading">
 <div class="panel-body">
-<p><<errorMessage>></p>
+<p class="error-message"><<errorMessage>></p>
 <<rpt-rqst-rspn>>
 </div>
 </div>
