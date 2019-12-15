@@ -203,16 +203,11 @@ public class PantherReport {
 					line = line.replaceAll("<<caseStatusColor>>", "red-background");
 				}
 			}
-			// TODO: need to properly log request and response
 			if (line.contains("<<request-body>>")) {
 				line = line.replaceAll("<<request-body>>", new ObjectMapper().writeValueAsString(model.getRequest()));
 			}
 			if (line.contains("<<response-body>>")) {
-				if (null != model.getResponse().getBody()) {
-					line = line.replaceAll("<<response-body>>", model.getResponse().getBody().toString());
-				} else {
-					line = line.replaceAll("<<response-body>>", "");
-				}
+				line = line.replaceAll("<<response-body>>", model.getActualResponse());
 			}
 			result.append(line).append("\n");
 		}

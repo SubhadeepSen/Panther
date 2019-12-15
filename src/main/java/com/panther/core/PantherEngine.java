@@ -83,7 +83,6 @@ public class PantherEngine {
 			HttpResponse httpResponse = httpClient.execute(baseRequest);
 			long endTime = System.currentTimeMillis();
 			pantherModel.getResponse().setResponseTime(String.valueOf(endTime - startTime));
-			pantherModel.setActualResponse(httpResponse);
 			verifyResponse(httpResponse, pantherModel);
 
 		} catch (IOException e) {
@@ -109,11 +108,11 @@ public class PantherEngine {
 		if (null != httpResponse.getEntity()
 				&& httpResponse.getFirstHeader("Content-Type").getValue().contains("application/json")) {
 			String actualResponse = EntityUtils.toString(httpResponse.getEntity());
+			pantherModel.setActualResponse(actualResponse);
 			String expectedResponse = pantherResponse.getBody().toString();
 			if (!new ObjectMapper().readTree(actualResponse).equals(pantherResponse.getBody())) {
 				pantherModel.setCaseStatus(false);
-				pantherModel.setCaseMessage(
-						"body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
+				pantherModel.setCaseMessage("body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
 				return;
 			}
 		}

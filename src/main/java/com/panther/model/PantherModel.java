@@ -1,7 +1,5 @@
 package com.panther.model;
 
-import org.apache.http.HttpResponse;
-
 public class PantherModel {
 
 	private String description;
@@ -9,7 +7,7 @@ public class PantherModel {
 	private PantherResponse response;
 	private boolean caseStatus;
 	private String caseMessage;
-	private HttpResponse actualResponse;
+	private String actualResponse = "";
 
 	public String getDescription() {
 		return description;
@@ -51,11 +49,11 @@ public class PantherModel {
 		this.caseMessage = caseMessage;
 	}
 
-	public HttpResponse getActualResponse() {
+	public String getActualResponse() {
 		return actualResponse;
 	}
 
-	public void setActualResponse(HttpResponse actualResponse) {
+	public void setActualResponse(String actualResponse) {
 		this.actualResponse = actualResponse;
 	}
 }
