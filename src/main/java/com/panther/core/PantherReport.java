@@ -1,25 +1,32 @@
 package com.panther.core;
 
+import static com.panther.util.PantherUtils.EMPTY_STRING;
+import static com.panther.util.PantherUtils.NEW_LINE;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panther.config.ConfigLoader;
+import com.panther.exception.PantherException;
 import com.panther.model.PantherAnalytics;
 import com.panther.model.PantherModel;
+import com.panther.model.PantherResponse;
+import com.panther.util.PantherUtils;;
 
 public class PantherReport {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PantherReport.class);
 	private static final String REPORT_SRC = "./src/main/java/com/panther/report";
 	private static final String REPORT_DEST = "./target/panther-report";
 	private String reportFile;
@@ -29,17 +36,59 @@ public class PantherReport {
 	private int minResponseTime = Integer.MAX_VALUE;
 	private int maxResponseTime = Integer.MIN_VALUE;
 
-	public void build(Map<String, List<PantherModel>> fileNameToPantherList) {
+	public void generate(Map<String, List<PantherModel>> fileNameToPantherList) {
 		createAnalytics(fileNameToPantherList);
 		try {
 			copyResources(new File(REPORT_SRC), new File(REPORT_DEST));
 			updatePieChartScript();
-			this.reportFile = REPORT_DEST + "/panther-report-" + dateTimeString() + ".html";
+			this.reportFile = REPORT_DEST + "/panther-report-" + PantherUtils.dateTimeString() + ".html";
 			Files.createFile(Paths.get(reportFile));
 			copyReportDefinition();
 			generateReport(fileNameToPantherList);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			throw new PantherException(e.getMessage());
+		}
+	}
+
+	private void createAnalytics(Map<String, List<PantherModel>> fileNameToPantherList) {
+		analytics = new HashMap<String, PantherAnalytics>();
+		PantherResponse pantherResponse = null;
+		int passedCount;
+		int failedCount;
+		for (Entry<String, List<PantherModel>> entry : fileNameToPantherList.entrySet()) {
+			passedCount = 0;
+			failedCount = 0;
+			for (PantherModel model : entry.getValue()) {
+				pantherResponse = model.getResponse();
+				if (model.caseStatus()) {
+					passedCount++;
+					totalPassed++;
+				} else {
+					failedCount++;
+					totalFailed++;
+				}
+				if (Integer.parseInt(pantherResponse.getResponseTime()) < minResponseTime) {
+					minResponseTime = Integer.parseInt(pantherResponse.getResponseTime());
+				}
+				if (Integer.parseInt(pantherResponse.getResponseTime()) > maxResponseTime) {
+					maxResponseTime = Integer.parseInt(pantherResponse.getResponseTime());
+				}
+			}
+			analytics.put(entry.getKey(), new PantherAnalytics(passedCount, failedCount));
+		}
+	}
+
+	private void copyResources(File sourceFolder, File destinationFolder) throws IOException {
+		if (sourceFolder.isDirectory()) {
+			if (!destinationFolder.exists()) {
+				destinationFolder.mkdir();
+			}
+			for (String file : sourceFolder.list()) {
+				copyResources(new File(sourceFolder, file), new File(destinationFolder, file));
+			}
+		} else if (!sourceFolder.getName().startsWith("rpt-")) {
+			Files.copy(sourceFolder.toPath(), destinationFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 	}
 
@@ -53,35 +102,13 @@ public class PantherReport {
 			if (line.contains("<<analyticsData>>")) {
 				line = line.replaceAll("<<analyticsData>>", scriptData.toString());
 			}
-			sb.append(line).append("\n");
+			sb.append(line).append(NEW_LINE);
 		}
 		Files.write(Paths.get(REPORT_DEST + "/js/panther.js"), sb.toString().getBytes());
 	}
 
-	private void createAnalytics(Map<String, List<PantherModel>> fileNameToPantherList) {
-		analytics = new HashMap<String, PantherAnalytics>();
-		int passedCount;
-		int failedCount;
-		for (Entry<String, List<PantherModel>> entry : fileNameToPantherList.entrySet()) {
-			passedCount = 0;
-			failedCount = 0;
-			for (PantherModel model : entry.getValue()) {
-				if (model.caseStatus()) {
-					passedCount++;
-					totalPassed++;
-				} else {
-					failedCount++;
-					totalFailed++;
-				}
-				if (Integer.parseInt(model.getResponse().getResponseTime()) < minResponseTime) {
-					minResponseTime = Integer.parseInt(model.getResponse().getResponseTime());
-				}
-				if (Integer.parseInt(model.getResponse().getResponseTime()) > maxResponseTime) {
-					maxResponseTime = Integer.parseInt(model.getResponse().getResponseTime());
-				}
-			}
-			analytics.put(entry.getKey(), new PantherAnalytics(passedCount, failedCount));
-		}
+	private void copyReportDefinition() throws IOException {
+		Files.copy(Paths.get(REPORT_SRC + "/rpt-def.txt"), Paths.get(reportFile), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	private void generateReport(Map<String, List<PantherModel>> fileNameToPantherList) throws IOException {
@@ -105,6 +132,8 @@ public class PantherReport {
 					try {
 						sb.append(defLine.replaceAll("<<rpt-body>>", parseAndLoadBody(entry)));
 					} catch (IOException e) {
+						LOGGER.error(e.getMessage());
+						throw new PantherException(e.getMessage());
 					}
 				});
 			} else {
@@ -121,7 +150,7 @@ public class PantherReport {
 		int totalCount = analytics.get(entry.getKey()).getTotalCaseCount();
 		for (String line : bodyLines) {
 			if (line.contains("<<fileName>>")) {
-				line = line.replaceAll("<<fileName>>", entry.getKey().replaceAll(".json", ""));
+				line = line.replaceAll("<<fileName>>", entry.getKey().replaceAll(".json", EMPTY_STRING));
 			}
 			if (line.contains("<<caseStatusColor>>")) {
 				if (passedCount == totalCount) {
@@ -141,7 +170,7 @@ public class PantherReport {
 			if (line.contains("<<loadCase>>")) {
 				line = line.replaceAll("<<loadCase>>", parseAndLoadCase(entry.getValue()));
 			}
-			result.append(line).append("\n");
+			result.append(line).append(NEW_LINE);
 		}
 		return result.toString();
 	}
@@ -153,7 +182,7 @@ public class PantherReport {
 			caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-case.txt"));
 			for (String line : caseLines) {
 				if (line.contains("<<description>>")) {
-					line = line.replaceAll("<<description>>", model.getDescription().replaceAll(" ", ""));
+					line = line.replaceAll("<<description>>", model.getDescription().replaceAll(" ", EMPTY_STRING));
 				}
 				if (line.contains("<<caseStatusColor>>")) {
 					if (!model.caseStatus()) {
@@ -179,10 +208,10 @@ public class PantherReport {
 					if (ConfigLoader.getConfig(null).isEnableReportLogging()) {
 						line = line.replaceAll("<<rpt-rqst-rspn>>", addRequestResponse(model));
 					} else {
-						line = line.replaceAll("<<rpt-rqst-rspn>>", "");
+						line = line.replaceAll("<<rpt-rqst-rspn>>", EMPTY_STRING);
 					}
 				}
-				result.append(line).append("\n");
+				result.append(line).append(NEW_LINE);
 			}
 		}
 		return result.toString();
@@ -194,7 +223,7 @@ public class PantherReport {
 		caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-rqst-rspn.txt"));
 		for (String line : caseLines) {
 			if (line.contains("<<rqst-rspn>>")) {
-				line = line.replaceAll("<<rqst-rspn>>", model.getDescription().replaceAll(" ", "") + "-rr");
+				line = line.replaceAll("<<rqst-rspn>>", model.getDescription().replaceAll(" ", EMPTY_STRING) + "-rr");
 			}
 			if (line.contains("<<caseStatusColor>>")) {
 				if (model.caseStatus()) {
@@ -209,32 +238,8 @@ public class PantherReport {
 			if (line.contains("<<response-body>>")) {
 				line = line.replaceAll("<<response-body>>", model.getActualResponse());
 			}
-			result.append(line).append("\n");
+			result.append(line).append(NEW_LINE);
 		}
 		return result.toString();
-	}
-
-	private void copyReportDefinition() throws IOException {
-		Files.copy(Paths.get(REPORT_SRC + "/rpt-def.txt"), Paths.get(reportFile), StandardCopyOption.REPLACE_EXISTING);
-	}
-
-	private static void copyResources(File sourceFolder, File destinationFolder) throws IOException {
-		if (sourceFolder.isDirectory()) {
-			if (!destinationFolder.exists()) {
-				destinationFolder.mkdir();
-			}
-			String files[] = sourceFolder.list();
-			for (String file : files) {
-				copyResources(new File(sourceFolder, file), new File(destinationFolder, file));
-			}
-		} else if (!sourceFolder.getName().startsWith("rpt-")) {
-			Files.copy(sourceFolder.toPath(), destinationFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		}
-	}
-
-	private String dateTimeString() {
-		String date = LocalDate.now().toString().replaceAll("-", "");
-		String time = LocalTime.now().toString().split("\\.")[0].replaceAll(":", "");
-		return date + time;
 	}
 }

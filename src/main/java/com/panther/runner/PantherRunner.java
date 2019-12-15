@@ -14,24 +14,25 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.panther.auth.Auth;
 import com.panther.auth.Authentication;
 import com.panther.config.ConfigLoader;
 import com.panther.core.PantherEngine;
 import com.panther.core.PantherReport;
-import com.panther.core.TemplateBuilder;
-import com.panther.core.TemplateResolver;
+import com.panther.core.PantherBuilder;
+import com.panther.core.PantherResolver;
 import com.panther.exception.PantherException;
 import com.panther.model.PantherConfig;
 import com.panther.model.PantherModel;
 
 public class PantherRunner extends ParentRunner<PantherModel> {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(PantherRunner.class);
 	private Map<String, List<PantherModel>> fileNameToPantherList;
 	private long startTime = 0;
 	private long endTime = 0;
-
 	private int count = 0;
 
 	public PantherRunner(Class<?> testClass) throws InitializationError {
@@ -50,16 +51,19 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		}
 		PantherConfig pantherConfig = ConfigLoader.getConfig(auth);
 		if (pantherConfig.wantToParse()) {
-			new TemplateBuilder().writeToJsonFile(pantherConfig.getApiDocsLocation(),
+			new PantherBuilder().buildCaseTemplate(pantherConfig.getApiDocsLocation(),
 					pantherConfig.getTestCasesLocation());
 		} else if (!pantherConfig.wantToParse() && pantherConfig.getTestCasesLocation() != null
 				&& pantherConfig.getTestCasesLocation() != "") {
-			fileNameToPantherList = new TemplateResolver().resolve(pantherConfig.getTestCasesLocation());
+			fileNameToPantherList = new PantherResolver().resolveCaseTemplate(pantherConfig.getTestCasesLocation());
 		}
 	}
 
 	@Override
 	protected List<PantherModel> getChildren() {
+		if(ConfigLoader.getConfig(null).wantToParse()) {
+			return new ArrayList<PantherModel>();
+		}
 		List<PantherModel> pantherModels = new ArrayList<PantherModel>();
 		fileNameToPantherList.entrySet().forEach(e -> {
 			pantherModels.addAll(e.getValue());
@@ -78,7 +82,6 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		try {
 			notifier.fireTestStarted(Description.createSuiteDescription(pantherModel.getDescription()));
 			new PantherEngine().execute(pantherModel);
-			System.out.println(pantherModel.caseStatus() + " --> " + pantherModel.getCaseMessage());
 			if (!pantherModel.caseStatus()) {
 				notifier.fireTestFailure(new Failure(Description.createSuiteDescription(pantherModel.getDescription()),
 						new PantherException(pantherModel.getCaseMessage())));
@@ -91,9 +94,10 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		}
 
 		if (count == 0) {
-			new PantherReport().build(fileNameToPantherList);
+			LOGGER.info("Building test report...");
+			new PantherReport().generate(fileNameToPantherList);
 			endTime = System.currentTimeMillis();
-			System.out.println("Execution completed in " + (((double) endTime - startTime) / 1000) + " secs.");
+			LOGGER.info("Execution completed in : " + (((double) endTime - startTime) / 1000) + " secs.");
 		}
 	}
 }
