@@ -56,28 +56,26 @@ public class PantherBuilder {
 					+ outputPath + "]");
 			throw new PantherException("Invalid location of api specification / output path.");
 		}
-
-		if (!outputPath.endsWith(".json")) {
-			LOGGER.error("Invalid path with filename for output file >> " + outputPath + ", should end with .json.");
-			throw new PantherException("Invalid path with filename for output file");
-		}
-
-		List<PantherModel> pantherModels = buildPantherModels(pathOfApiSpecification);
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath))) {
-			bw.write(PantherUtils.convertToJsonString(pantherModels));
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			throw new PantherException(e.getMessage());
-		}
-		LOGGER.info("Template generation completed >> " + outputPath);
+		Map<String, List<PantherModel>> fileToPantherModels = buildPantherModels(pathOfApiSpecification);
+		fileToPantherModels.entrySet().forEach(entry -> {
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + "/" + entry.getKey() + ".json"))) {
+				bw.write(PantherUtils.convertToJsonString(entry.getValue()));
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage());
+				throw new PantherException(e.getMessage());
+			}
+			LOGGER.info("Template generation completed >> " + outputPath);
+		});
 	}
 
-	private List<PantherModel> buildPantherModels(String pathOfApiSpecification) {
-		List<PantherModel> pantherModels = new ArrayList<>();
+	private Map<String, List<PantherModel>> buildPantherModels(String pathOfApiSpecification) {
+		Map<String, List<PantherModel>> fileToPantherModels = new HashMap<String, List<PantherModel>>();
 		PantherModel pantherModel = null;
 		PantherRequest pantherRequest = null;
 		PantherResponse pantherResponse = null;
 		Swagger swagger = null;
+		String tag = "";
+		Operation operation = null;
 
 		if (pathOfApiSpecification.startsWith("http")) {
 			// retrieving and parsing API specification from http(s) location
@@ -95,7 +93,7 @@ public class PantherBuilder {
 			swagger = new SwaggerParser().read(pathOfApiSpecification);
 		}
 
-		String baseUrl = ConfigLoader.getConfig(null).getApiScheme() + swagger.getHost() + swagger.getBasePath();
+		String baseUrl = ConfigLoader.getConfig(null).getApiScheme() + "://" + swagger.getHost() + swagger.getBasePath();
 
 		for (Entry<String, Path> pathEntrySet : swagger.getPaths().entrySet()) {
 			pantherModel = new PantherModel();
@@ -104,18 +102,24 @@ public class PantherBuilder {
 			pantherRequest.setUrl(baseUrl + pathEntrySet.getKey());
 			for (Entry<HttpMethod, Operation> operationEntrySet : pathEntrySet.getValue().getOperationMap()
 					.entrySet()) {
-				pantherModel.setDescription(operationEntrySet.getValue().getSummary());
+				operation = operationEntrySet.getValue();
+				pantherModel.setDescription(operation.getSummary());
 				pantherRequest.setMethod(operationEntrySet.getKey().toString());
-				buildRequestTemplate(swagger, pantherRequest, operationEntrySet.getValue().getParameters());
-				buildResponseTemplate(swagger, pantherResponse, operationEntrySet.getValue().getResponses());
-				pantherRequest.getHeaders().put("Accept", operationEntrySet.getValue().getConsumes().get(0));
-				pantherRequest.getHeaders().put("Content-Type", operationEntrySet.getValue().getConsumes().get(0));
+				buildRequestTemplate(swagger, pantherRequest, operation.getParameters());
+				buildResponseTemplate(swagger, pantherResponse, operation.getResponses());
+				pantherRequest.getHeaders().put("Accept", operation.getConsumes().get(0));
+				pantherRequest.getHeaders().put("Content-Type", operation.getConsumes().get(0));
+				tag = operation.getTags().get(0);
 			}
 			pantherModel.setRequest(pantherRequest);
 			pantherModel.setResponse(pantherResponse);
-			pantherModels.add(pantherModel);
+
+			if (null == fileToPantherModels.get(tag)) {
+				fileToPantherModels.put(tag, new ArrayList<PantherModel>());
+			}
+			fileToPantherModels.get(tag).add(pantherModel);
 		}
-		return pantherModels;
+		return fileToPantherModels;
 	}
 
 	private void buildRequestTemplate(Swagger swagger, PantherRequest pantherRequest, List<Parameter> parameters) {
