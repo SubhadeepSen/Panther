@@ -5,7 +5,7 @@
 
 	<groupId>com</groupId>
 	<artifactId>panther</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>panther</name>
@@ -67,6 +67,16 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**/*.txt</include>
+					<include>**/*.js</include>
+					<include>**/*.css</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 </project>
