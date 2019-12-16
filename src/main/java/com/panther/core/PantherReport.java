@@ -5,6 +5,7 @@ import static com.panther.util.PantherUtils.NEW_LINE;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -27,14 +28,28 @@ import com.panther.util.PantherUtils;;
 public class PantherReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PantherReport.class);
-	private static final String REPORT_SRC = "./src/main/java/com/panther/report";
+	// private static final String REPORT_SRC = "./src/main/java/com/panther/report";
 	private static final String REPORT_DEST = "./target/panther-report";
+	private static String REPORT_SRC;
 	private String reportFile;
 	private Map<String, PantherAnalytics> analytics;
 	private int totalPassed = 0;
 	private int totalFailed = 0;
 	private int minResponseTime = Integer.MAX_VALUE;
 	private int maxResponseTime = Integer.MIN_VALUE;
+
+	static {
+		try {
+			String path = PantherReport.class.getClassLoader().getResource("report").toURI().getPath();
+			if (path.charAt(0) == '/') {
+				path = path.replaceFirst("/", "");
+			}
+			REPORT_SRC = path;
+		} catch (URISyntaxException e) {
+			LOGGER.error("Unable to find path!");
+			throw new PantherException("Unable to find path!");
+		}
+	}
 
 	public void generate(Map<String, List<PantherModel>> fileNameToPantherList) {
 		createAnalytics(fileNameToPantherList);
