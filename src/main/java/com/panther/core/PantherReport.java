@@ -2,22 +2,29 @@ package com.panther.core;
 
 import static com.panther.util.PantherUtils.EMPTY_STRING;
 import static com.panther.util.PantherUtils.NEW_LINE;
+import static com.panther.util.PantherUtils.OBJECT_MAPPER;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panther.config.ConfigLoader;
 import com.panther.exception.PantherException;
 import com.panther.model.PantherAnalytics;
@@ -27,34 +34,53 @@ import com.panther.util.PantherUtils;;
 
 public class PantherReport {
 
+	private static final String PANTHER_REPORT = "panther-report";
+	private static final String TARGET = "target";
+	private static final String PANTHER_CONFIG = "panther-config.json";
 	private static final Logger LOGGER = LoggerFactory.getLogger(PantherReport.class);
-	// private static final String REPORT_SRC = "./src/main/java/com/panther/report";
-	private static final String REPORT_DEST = "./target/panther-report";
+	private static final String JAR_URI_PREFIX = "jar:file:/";
+	private static final String FOLDER_URI_PREFIX = "file:/";
+	private static final String JAR_RESOURCE = "report";
 	private static String REPORT_SRC;
+	private static String REPORT_DEST;
 	private String reportFile;
 	private Map<String, PantherAnalytics> analytics;
 	private int totalPassed = 0;
 	private int totalFailed = 0;
 	private int minResponseTime = Integer.MAX_VALUE;
 	private int maxResponseTime = Integer.MIN_VALUE;
+	private boolean isJarFile;
+	private JarFile jarFile;
+	private JarEntry reportBodyJarEntry;
+	private JarEntry reportCaseJarEntry;
+	private JarEntry reportDefJarEntry;
+	private JarEntry reportRqstRspnJarEntry;
 
-	static {
-		try {
-			String path = PantherReport.class.getClassLoader().getResource("report").toURI().getPath();
-			if (path.charAt(0) == '/') {
-				path = path.replaceFirst("/", "");
+	public PantherReport() {
+		String srcUrl = this.getClass().getClassLoader().getResource(JAR_RESOURCE).toString().replaceAll("%20", " ");
+		if (srcUrl.startsWith(JAR_URI_PREFIX) && srcUrl.indexOf("!") != -1) {
+			isJarFile = true;
+			try {
+				this.jarFile = new JarFile(srcUrl.substring(JAR_URI_PREFIX.length(), srcUrl.indexOf("!")));
+			} catch (IOException e) {
+				throw new PantherException(e.getMessage());
 			}
-			REPORT_SRC = path;
-		} catch (URISyntaxException e) {
-			LOGGER.error("Unable to find path!");
-			throw new PantherException("Unable to find path!");
+			REPORT_SRC = JAR_RESOURCE;
+		} else {
+			REPORT_SRC = srcUrl.substring(FOLDER_URI_PREFIX.length());
 		}
+		String destUrl = this.getClass().getClassLoader().getResource(PANTHER_CONFIG).toString().replaceAll("%20", " ");
+		REPORT_DEST = destUrl.substring(FOLDER_URI_PREFIX.length(), destUrl.indexOf(TARGET) + TARGET.length() + 1) + PANTHER_REPORT;
 	}
 
 	public void generate(Map<String, List<PantherModel>> fileNameToPantherList) {
 		createAnalytics(fileNameToPantherList);
 		try {
-			copyResources(new File(REPORT_SRC), new File(REPORT_DEST));
+			if (isJarFile) {
+				copyStaticResources(jarFile);
+			} else {
+				copyStaticResources(new File(REPORT_SRC), new File(REPORT_DEST));
+			}
 			updatePieChartScript();
 			this.reportFile = REPORT_DEST + "/panther-report-" + PantherUtils.dateTimeString() + ".html";
 			Files.createFile(Paths.get(reportFile));
@@ -94,13 +120,47 @@ public class PantherReport {
 		}
 	}
 
-	private void copyResources(File sourceFolder, File destinationFolder) throws IOException {
+	private void copyStaticResources(JarFile fromJar) throws IOException {
+		Enumeration<JarEntry> entries = fromJar.entries();
+		JarEntry entry = null;
+		File dest = null;
+		File parent = null;
+		FileOutputStream out = null;
+		BufferedReader br = null;
+		while (entries.hasMoreElements()) {
+			entry = entries.nextElement();
+			if (entry.getName().startsWith(REPORT_SRC + "/rpt-body")) {
+				reportBodyJarEntry = entry;
+			} else if (entry.getName().startsWith(REPORT_SRC + "/rpt-case")) {
+				reportCaseJarEntry = entry;
+			} else if (entry.getName().startsWith(REPORT_SRC + "/rpt-def")) {
+				reportDefJarEntry = entry;
+			} else if (entry.getName().startsWith(REPORT_SRC + "/rpt-rqst-rspn")) {
+				reportRqstRspnJarEntry = entry;
+			} else if (entry.getName().startsWith(REPORT_SRC + "/") && !entry.isDirectory()
+					&& !entry.getName().startsWith(REPORT_SRC + "/rpt-")) {
+				dest = new File(REPORT_DEST + "/" + entry.getName().substring(REPORT_SRC.length() + 1));
+				parent = dest.getParentFile();
+				if (parent != null) {
+					parent.mkdirs();
+				}
+				out = new FileOutputStream(dest);
+				br = new BufferedReader(new InputStreamReader(fromJar.getInputStream(entry), "UTF-8"));
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					out.write(line.getBytes());
+				}
+			}
+		}
+	}
+
+	private void copyStaticResources(File sourceFolder, File destinationFolder) throws IOException {
 		if (sourceFolder.isDirectory()) {
 			if (!destinationFolder.exists()) {
 				destinationFolder.mkdir();
 			}
 			for (String file : sourceFolder.list()) {
-				copyResources(new File(sourceFolder, file), new File(destinationFolder, file));
+				copyStaticResources(new File(sourceFolder, file), new File(destinationFolder, file));
 			}
 		} else if (!sourceFolder.getName().startsWith("rpt-")) {
 			Files.copy(sourceFolder.toPath(), destinationFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -123,7 +183,13 @@ public class PantherReport {
 	}
 
 	private void copyReportDefinition() throws IOException {
-		Files.copy(Paths.get(REPORT_SRC + "/rpt-def.txt"), Paths.get(reportFile), StandardCopyOption.REPLACE_EXISTING);
+		if (isJarFile) {
+			Files.copy(jarFile.getInputStream(reportDefJarEntry), Paths.get(reportFile),
+					StandardCopyOption.REPLACE_EXISTING);
+		} else {
+			Files.copy(Paths.get(REPORT_SRC + "/rpt-def.txt"), Paths.get(reportFile),
+					StandardCopyOption.REPLACE_EXISTING);
+		}
 	}
 
 	private void generateReport(Map<String, List<PantherModel>> fileNameToPantherList) throws IOException {
@@ -160,7 +226,12 @@ public class PantherReport {
 
 	private String parseAndLoadBody(Entry<String, List<PantherModel>> entry) throws IOException {
 		StringBuilder result = new StringBuilder();
-		List<String> bodyLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-body.txt"));
+		List<String> bodyLines = null;
+		if (isJarFile) {
+			bodyLines = getLinesFromJarEntry(reportBodyJarEntry);
+		} else {
+			bodyLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-body.txt"));
+		}
 		int passedCount = analytics.get(entry.getKey()).getPassedCaseCount();
 		int totalCount = analytics.get(entry.getKey()).getTotalCaseCount();
 		for (String line : bodyLines) {
@@ -194,7 +265,11 @@ public class PantherReport {
 		StringBuilder result = new StringBuilder();
 		List<String> caseLines = null;
 		for (PantherModel model : pantherModels) {
-			caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-case.txt"));
+			if (isJarFile) {
+				caseLines = getLinesFromJarEntry(reportCaseJarEntry);
+			} else {
+				caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-case.txt"));
+			}
 			for (String line : caseLines) {
 				if (line.contains("<<description>>")) {
 					line = line.replaceAll("<<description>>", model.getDescription().replaceAll(" ", EMPTY_STRING));
@@ -235,7 +310,11 @@ public class PantherReport {
 	private String addRequestResponse(PantherModel model) throws IOException {
 		StringBuilder result = new StringBuilder();
 		List<String> caseLines = null;
-		caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-rqst-rspn.txt"));
+		if (isJarFile) {
+			caseLines = getLinesFromJarEntry(reportRqstRspnJarEntry);
+		} else {
+			caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-rqst-rspn.txt"));
+		}
 		for (String line : caseLines) {
 			if (line.contains("<<rqst-rspn>>")) {
 				line = line.replaceAll("<<rqst-rspn>>", model.getDescription().replaceAll(" ", EMPTY_STRING) + "-rr");
@@ -248,7 +327,7 @@ public class PantherReport {
 				}
 			}
 			if (line.contains("<<request-body>>")) {
-				line = line.replaceAll("<<request-body>>", new ObjectMapper().writeValueAsString(model.getRequest()));
+				line = line.replaceAll("<<request-body>>", OBJECT_MAPPER.writeValueAsString(model.getRequest()));
 			}
 			if (line.contains("<<response-body>>")) {
 				line = line.replaceAll("<<response-body>>", model.getActualResponse());
@@ -256,5 +335,10 @@ public class PantherReport {
 			result.append(line).append(NEW_LINE);
 		}
 		return result.toString();
+	}
+
+	private List<String> getLinesFromJarEntry(JarEntry jarEntry) throws IOException {
+		return new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8))
+				.lines().collect(Collectors.toList());
 	}
 }

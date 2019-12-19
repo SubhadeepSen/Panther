@@ -94,7 +94,7 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		}
 
 		if (count == 0) {
-			LOGGER.info("Building test report...");
+			LOGGER.info("Building panther test report...");
 			new PantherReport().generate(fileNameToPantherList);
 			endTime = System.currentTimeMillis();
 			LOGGER.info("Execution completed in : " + (((double) endTime - startTime) / 1000) + " secs.");
