@@ -1,7 +1,7 @@
 <!DOCTYPE html> <html> <head> <title>Panther</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/bootstrap.min.css"> <link rel="stylesheet" href="css/panther.css"> <link rel="stylesheet" href="css/font-awesome.min.css"> </head> <body class="container"> <h1 class="margin-bottom-20"> 
 <<appName>> Test Report </h1> <div class="row margin-bottom-20"> <div class="col-lg-4 col-md-2 col-sm-1"></div> <div class="col-lg-4 col-md-6 col-sm-11"> <canvas id="pie-report" width="400" height="300"></canvas> </div> <div class="col-lg-4 col-md-4 col-sm-12 padding-left"> <div class="row"> <div class="col-sm-2"><span class="small-box teal-box"></div> 
 <div class="col-sm-4 box-text">Total: <<totalCount>></div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box green-box"></div> 
-<div class="col-sm-4 box-text">Paased: <<passedCount>></div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box red-box"></div> 
+<div class="col-sm-4 box-text">Passed: <<passedCount>></div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box red-box"></div> 
 <div class="col-sm-4 box-text">Failed: <<failedCount>></div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box yellow-box"></div> 
 <div class="col-sm-8 box-text">Response time (min): <<minResponseTime>> ms</div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box blue-box"></div> 
 <div class="col-sm-8 box-text">Response time (max): <<maxResponseTime>> ms</div> </div> </div> </div> 
