@@ -1,0 +1,164 @@
+[
+	{
+		"description": "Create Message Queue",
+		"request": {
+			"url": "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
+			"method": "POST",
+			"pathParams": {
+				"queueName": "test-queue"
+			},
+			"headers": {
+				"Authorization": "",
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+		},
+		"response": {
+			"status": "200",
+			"body": {
+				"queueId": "1",
+				"queueName": "test-queue"
+			}
+		}
+	},
+	{
+		"description": "Publish Message To Queue",
+		"request": {
+			"url": "http://localhost:8085/message-queue-manager/api/message",
+			"method": "POST",
+			"body": {
+				"queueName": "test-queue",
+				"messageId": "",
+				"message": "this is a test message"
+			},
+			"headers": {
+				"Authorization": "",
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+		},
+		"response": {
+			"status": "200",
+			"body": {
+				"queueName": "test-queue",
+				"messageId": "1",
+				"message": "this is a test message"
+			}
+		}
+	},
+	{
+		"description": "Retrieve All Message Queues",
+		"request": {
+			"url": "http://localhost:8085/message-queue-manager/api/queues",
+			"method": "GET",
+			"headers": {
+				"Authorization": "",
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+		},
+		"response": {
+			"status": "200",
+			"body": [
+				{
+					"queueId": "1",
+					"queueName": "test-queue"
+				}
+			]
+		}
+	},
+	{
+		"description": "Retreive Messages From Queue",
+		"request": {
+			"url": "http://localhost:8085/message-queue-manager/api/messages/{queueName}",
+			"method": "GET",
+			"pathParams": {
+				"queueName": "test-queue"
+			},
+			"headers": {
+				"Authorization": "",
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+		},
+		"response": {
+			"status": "200",
+			"body": [
+				{
+					"queueName": "test-queue",
+					"messageId": "1",
+					"message": "this is a test message"
+				}
+			]
+		}
+	},
+	{
+		"description": "Retreive Messages From Queue in Chunks",
+		"request": {
+			"url": "http://localhost:8085/message-queue-manager/api/messages/{queueName}/{page}/{pageSize}",
+			"method": "GET",
+			"pathParams": {
+				"queueName": "test-queue",
+				"page": "1",
+				"pageSize": "1"
+			},
+			"headers": {
+				"Authorization": "",
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+		},
+		"response": {
+			"status": "200",
+			"body": [
+				{
+					"queueName": "test-queue",
+					"messageId": "1",
+					"message": "this is a test message"
+				}
+			]
+		}
+	},
+	{
+		"description": "Consume Message From Queue",
+		"request": {
+			"url": "http://localhost:8085/message-queue-manager/api/message/{queueName}",
+			"method": "DELETE",
+			"pathParams": {
+				"queueName": "test-queue"
+			},
+			"headers": {
+				"Authorization": "",
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+		},
+		"response": {
+			"status": "200",
+			"body": {
+				"queueName": "test-queue",
+				"messageId": "1",
+				"message": "this is a test message"
+			}
+		}
+	},
+	{
+		"description": "Delete Queue",
+		"request": {
+			"url": "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
+			"method": "DELETE",
+			"pathParams": {
+				"queueName": "test-queue"
+			},
+			"headers": {
+				"Authorization": "",
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+		},
+		"response": {
+			"status": "200",
+			"body": true
+		}
+	}
+]

@@ -70,7 +70,8 @@ public class PantherReport {
 			REPORT_SRC = srcUrl.substring(FOLDER_URI_PREFIX.length());
 		}
 		String destUrl = this.getClass().getClassLoader().getResource(PANTHER_CONFIG).toString().replaceAll("%20", " ");
-		REPORT_DEST = destUrl.substring(FOLDER_URI_PREFIX.length(), destUrl.indexOf(TARGET) + TARGET.length() + 1) + PANTHER_REPORT;
+		REPORT_DEST = destUrl.substring(FOLDER_URI_PREFIX.length(), destUrl.indexOf(TARGET) + TARGET.length() + 1)
+				+ PANTHER_REPORT;
 	}
 
 	public void generate(Map<String, List<PantherModel>> fileNameToPantherList) {
@@ -170,8 +171,9 @@ public class PantherReport {
 	private void updatePieChartScript() throws IOException {
 		StringBuilder scriptData = new StringBuilder();
 		StringBuilder sb = new StringBuilder();
-		scriptData.append("[{value: ").append(totalPassed).append(", color: \"#4caf50\"},").append("{value: ")
-				.append(totalFailed).append(", color: \"#f44336\"}]");
+		scriptData.append("[{value: ").append(totalPassed + ", ").append("color: \"#4caf50\", ")
+				.append("label: \"Passed\"},").append("{value: ").append(totalFailed + ", ")
+				.append("color: \"#f44336\", ").append("label: \"Failed\"}]");
 		List<String> lines = Files.readAllLines(Paths.get(REPORT_DEST + "/js/panther.js"));
 		for (String line : lines) {
 			if (line.contains("<<analyticsData>>")) {
@@ -236,7 +238,7 @@ public class PantherReport {
 		int totalCount = analytics.get(entry.getKey()).getTotalCaseCount();
 		for (String line : bodyLines) {
 			if (line.contains("<<fileName>>")) {
-				line = line.replaceAll("<<fileName>>", entry.getKey().replaceAll(".json", EMPTY_STRING));
+				line = line.replaceAll("<<fileName>>", entry.getKey().replace(".json", EMPTY_STRING).replaceAll(" ", "-"));
 			}
 			if (line.contains("<<caseStatusColor>>")) {
 				if (passedCount == totalCount) {
