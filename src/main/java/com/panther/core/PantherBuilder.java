@@ -74,7 +74,7 @@ public class PantherBuilder {
 		PantherRequest pantherRequest = null;
 		PantherResponse pantherResponse = null;
 		Swagger swagger = null;
-		String tag = "";
+		String tag = EMPTY_STRING;
 		Operation operation = null;
 
 		if (pathOfApiSpecification.startsWith("http")) {
@@ -96,12 +96,12 @@ public class PantherBuilder {
 		String baseUrl = ConfigLoader.getConfig(null).getApiScheme() + "://" + swagger.getHost() + swagger.getBasePath();
 
 		for (Entry<String, Path> pathEntrySet : swagger.getPaths().entrySet()) {
-			pantherModel = new PantherModel();
-			pantherRequest = new PantherRequest();
-			pantherResponse = new PantherResponse();
-			pantherRequest.setUrl(baseUrl + pathEntrySet.getKey());
 			for (Entry<HttpMethod, Operation> operationEntrySet : pathEntrySet.getValue().getOperationMap()
 					.entrySet()) {
+				pantherModel = new PantherModel();
+				pantherRequest = new PantherRequest();
+				pantherResponse = new PantherResponse();
+				pantherRequest.setUrl(baseUrl + pathEntrySet.getKey());
 				operation = operationEntrySet.getValue();
 				pantherModel.setDescription(operation.getSummary());
 				pantherRequest.setMethod(operationEntrySet.getKey().toString());
@@ -109,15 +109,15 @@ public class PantherBuilder {
 				buildResponseTemplate(swagger, pantherResponse, operation.getResponses());
 				pantherRequest.getHeaders().put("Accept", operation.getConsumes().get(0));
 				pantherRequest.getHeaders().put("Content-Type", operation.getConsumes().get(0));
-				tag = operation.getTags().get(0);
-			}
-			pantherModel.setRequest(pantherRequest);
-			pantherModel.setResponse(pantherResponse);
+				tag = operation.getTags().get(0); // filename
+				pantherModel.setRequest(pantherRequest);
+				pantherModel.setResponse(pantherResponse);
 
-			if (null == fileToPantherModels.get(tag)) {
-				fileToPantherModels.put(tag, new ArrayList<PantherModel>());
+				if (null == fileToPantherModels.get(tag)) {
+					fileToPantherModels.put(tag, new ArrayList<PantherModel>());
+				}
+				fileToPantherModels.get(tag).add(pantherModel);
 			}
-			fileToPantherModels.get(tag).add(pantherModel);
 		}
 		return fileToPantherModels;
 	}
