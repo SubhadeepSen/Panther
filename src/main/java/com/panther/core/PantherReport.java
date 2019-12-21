@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -121,13 +122,15 @@ public class PantherReport {
 		}
 	}
 
-	private void copyStaticResources(JarFile fromJar) throws IOException {
-		Enumeration<JarEntry> entries = fromJar.entries();
+	private void copyStaticResources(JarFile jarFile) throws IOException {
+		Enumeration<JarEntry> entries = jarFile.entries();
 		JarEntry entry = null;
 		File dest = null;
 		File parent = null;
 		FileOutputStream out = null;
-		BufferedReader br = null;
+		InputStream in = null;
+		int read = 0;
+		byte[] buffer = null;
 		while (entries.hasMoreElements()) {
 			entry = entries.nextElement();
 			if (entry.getName().startsWith(REPORT_SRC + "/rpt-body")) {
@@ -145,11 +148,22 @@ public class PantherReport {
 				if (parent != null) {
 					parent.mkdirs();
 				}
-				out = new FileOutputStream(dest);
-				br = new BufferedReader(new InputStreamReader(fromJar.getInputStream(entry), "UTF-8"));
-				String line = null;
-				while ((line = br.readLine()) != null) {
-					out.write(line.getBytes());
+				try {
+					out = new FileOutputStream(dest);
+					buffer = new byte[1024];
+					in = jarFile.getInputStream(entry);
+					while ((read = in.read(buffer)) != -1) {
+						out.write(buffer, 0, read);
+					}
+				} catch (IOException e) {
+					throw new PantherException(e.getMessage());
+				} finally {
+					if (null != in) {
+						in.close();
+					}
+					if (null != out) {
+						out.close();
+					}
 				}
 			}
 		}
@@ -238,7 +252,8 @@ public class PantherReport {
 		int totalCount = analytics.get(entry.getKey()).getTotalCaseCount();
 		for (String line : bodyLines) {
 			if (line.contains("<<fileName>>")) {
-				line = line.replaceAll("<<fileName>>", entry.getKey().replace(".json", EMPTY_STRING).replaceAll(" ", "-"));
+				line = line.replaceAll("<<fileName>>",
+						entry.getKey().replace(".json", EMPTY_STRING).replaceAll(" ", "-"));
 			}
 			if (line.contains("<<caseStatusColor>>")) {
 				if (passedCount == totalCount) {
