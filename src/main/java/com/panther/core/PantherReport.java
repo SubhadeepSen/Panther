@@ -210,31 +210,31 @@ public class PantherReport {
 
 	private void generateReport(Map<String, List<PantherModel>> fileNameToPantherList) throws IOException {
 		StringBuilder sb = new StringBuilder();
-		List<String> defLines = Files.readAllLines(Paths.get(reportFile));
-		for (String defLine : defLines) {
-			if (defLine.contains("<<appName>>")) {
-				sb.append(defLine.replaceAll("<<appName>>", ConfigLoader.getConfig(null).getReportName()));
-			} else if (defLine.contains("<<totalCount>>")) {
-				sb.append(defLine.replaceAll("<<totalCount>>", String.valueOf(totalPassed + totalFailed)));
-			} else if (defLine.contains("<<passedCount>>")) {
-				sb.append(defLine.replaceAll("<<passedCount>>", String.valueOf(totalPassed)));
-			} else if (defLine.contains("<<failedCount>>")) {
-				sb.append(defLine.replaceAll("<<failedCount>>", String.valueOf(totalFailed)));
-			} else if (defLine.contains("<<minResponseTime>>")) {
-				sb.append(defLine.replaceAll("<<minResponseTime>>", String.valueOf(minResponseTime)));
-			} else if (defLine.contains("<<maxResponseTime>>")) {
-				sb.append(defLine.replaceAll("<<maxResponseTime>>", String.valueOf(maxResponseTime)));
-			} else if (defLine.contains("<<rpt-body>>")) {
+		List<String> lines = Files.readAllLines(Paths.get(reportFile));
+		for (String line : lines) {
+			if (line.contains("<<appName>>")) {
+				sb.append(line.replaceAll("<<appName>>", ConfigLoader.getConfig(null).getReportName()));
+			} else if (line.contains("<<totalCount>>")) {
+				sb.append(line.replaceAll("<<totalCount>>", String.valueOf(totalPassed + totalFailed)));
+			} else if (line.contains("<<passedCount>>")) {
+				sb.append(line.replaceAll("<<passedCount>>", String.valueOf(totalPassed)));
+			} else if (line.contains("<<failedCount>>")) {
+				sb.append(line.replaceAll("<<failedCount>>", String.valueOf(totalFailed)));
+			} else if (line.contains("<<minResponseTime>>")) {
+				sb.append(line.replaceAll("<<minResponseTime>>", String.valueOf(minResponseTime)));
+			} else if (line.contains("<<maxResponseTime>>")) {
+				sb.append(line.replaceAll("<<maxResponseTime>>", String.valueOf(maxResponseTime)));
+			} else if (line.contains("<<rpt-body>>")) {
 				fileNameToPantherList.entrySet().forEach(entry -> {
 					try {
-						sb.append(defLine.replaceAll("<<rpt-body>>", parseAndLoadBody(entry)));
+						sb.append(line.replaceAll("<<rpt-body>>", parseAndLoadBody(entry)));
 					} catch (IOException e) {
 						LOGGER.error(e.getMessage());
 						throw new PantherException(e.getMessage());
 					}
 				});
 			} else {
-				sb.append(defLine);
+				sb.append(line);
 			}
 		}
 		Files.write(Paths.get(reportFile), sb.toString().getBytes());
@@ -242,15 +242,15 @@ public class PantherReport {
 
 	private String parseAndLoadBody(Entry<String, List<PantherModel>> entry) throws IOException {
 		StringBuilder result = new StringBuilder();
-		List<String> bodyLines = null;
+		List<String> lines = null;
 		if (isJarFile) {
-			bodyLines = getLinesFromJarEntry(reportBodyJarEntry);
+			lines = getLinesFromJarEntry(reportBodyJarEntry);
 		} else {
-			bodyLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-body.txt"));
+			lines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-body.txt"));
 		}
 		int passedCount = analytics.get(entry.getKey()).getPassedCaseCount();
 		int totalCount = analytics.get(entry.getKey()).getTotalCaseCount();
-		for (String line : bodyLines) {
+		for (String line : lines) {
 			if (line.contains("<<fileName>>")) {
 				line = line.replaceAll("<<fileName>>",
 						entry.getKey().replace(".json", EMPTY_STRING).replaceAll(" ", "-"));
@@ -280,14 +280,14 @@ public class PantherReport {
 
 	private String parseAndLoadCase(List<PantherModel> pantherModels) throws IOException {
 		StringBuilder result = new StringBuilder();
-		List<String> caseLines = null;
+		List<String> lines = null;
 		for (PantherModel model : pantherModels) {
 			if (isJarFile) {
-				caseLines = getLinesFromJarEntry(reportCaseJarEntry);
+				lines = getLinesFromJarEntry(reportCaseJarEntry);
 			} else {
-				caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-case.txt"));
+				lines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-case.txt"));
 			}
-			for (String line : caseLines) {
+			for (String line : lines) {
 				if (line.contains("<<description>>")) {
 					line = line.replaceAll("<<description>>", model.getDescription().replaceAll(" ", EMPTY_STRING));
 				}
@@ -313,7 +313,7 @@ public class PantherReport {
 				}
 				if (line.contains("<<rpt-rqst-rspn>>")) {
 					if (ConfigLoader.getConfig(null).isEnableReportLogging()) {
-						line = line.replaceAll("<<rpt-rqst-rspn>>", addRequestResponse(model));
+						line = line.replaceAll("<<rpt-rqst-rspn>>", parseAddRequestResponse(model));
 					} else {
 						line = line.replaceAll("<<rpt-rqst-rspn>>", EMPTY_STRING);
 					}
@@ -324,15 +324,15 @@ public class PantherReport {
 		return result.toString();
 	}
 
-	private String addRequestResponse(PantherModel model) throws IOException {
+	private String parseAddRequestResponse(PantherModel model) throws IOException {
 		StringBuilder result = new StringBuilder();
-		List<String> caseLines = null;
+		List<String> lines = null;
 		if (isJarFile) {
-			caseLines = getLinesFromJarEntry(reportRqstRspnJarEntry);
+			lines = getLinesFromJarEntry(reportRqstRspnJarEntry);
 		} else {
-			caseLines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-rqst-rspn.txt"));
+			lines = Files.readAllLines(Paths.get(REPORT_SRC + "/rpt-rqst-rspn.txt"));
 		}
-		for (String line : caseLines) {
+		for (String line : lines) {
 			if (line.contains("<<rqst-rspn>>")) {
 				line = line.replaceAll("<<rqst-rspn>>", model.getDescription().replaceAll(" ", EMPTY_STRING) + "-rr");
 			}
@@ -344,10 +344,10 @@ public class PantherReport {
 				}
 			}
 			if (line.contains("<<request-body>>")) {
-				line = line.replaceAll("<<request-body>>", OBJECT_MAPPER.writeValueAsString(model.getRequest()));
+				line = line.replaceAll("<<request-body>>", formatToHtmlJsonView(OBJECT_MAPPER.writeValueAsString(model.getRequest())));
 			}
 			if (line.contains("<<response-body>>")) {
-				line = line.replaceAll("<<response-body>>", model.getActualResponse());
+				line = line.replaceAll("<<response-body>>", formatToHtmlJsonView(model.getActualResponse()));
 			}
 			result.append(line).append(NEW_LINE);
 		}
@@ -357,5 +357,10 @@ public class PantherReport {
 	private List<String> getLinesFromJarEntry(JarEntry jarEntry) throws IOException {
 		return new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8))
 				.lines().collect(Collectors.toList());
+	}
+
+	private String formatToHtmlJsonView(String jsonString) {
+		return jsonString.replaceAll(",", ", <br>").replaceAll("\\{", "{<br>").replaceAll("\\}", "<br>}")
+				.replaceAll("\\[", "[<br>").replaceAll("\\]", "<br>]");
 	}
 }
