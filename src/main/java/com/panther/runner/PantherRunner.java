@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import com.panther.auth.Auth;
 import com.panther.auth.Authentication;
 import com.panther.config.ConfigLoader;
+import com.panther.core.PantherBuilder;
 import com.panther.core.PantherEngine;
 import com.panther.core.PantherReport;
-import com.panther.core.PantherBuilder;
 import com.panther.core.PantherResolver;
 import com.panther.exception.PantherException;
 import com.panther.model.PantherConfig;
@@ -53,6 +53,8 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 		if (pantherConfig.wantToParse()) {
 			new PantherBuilder().buildCaseTemplate(pantherConfig.getApiDocsLocation(),
 					pantherConfig.getTestCasesLocation());
+			endTime = System.currentTimeMillis();
+			LOGGER.info("Execution completed in : " + (((double) endTime - startTime) / 1000) + " secs.");
 		} else if (!pantherConfig.wantToParse() && pantherConfig.getTestCasesLocation() != null
 				&& pantherConfig.getTestCasesLocation() != "") {
 			fileNameToPantherList = new PantherResolver().resolveCaseTemplate(pantherConfig.getTestCasesLocation());
@@ -61,7 +63,7 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 
 	@Override
 	protected List<PantherModel> getChildren() {
-		if(ConfigLoader.getConfig(null).wantToParse()) {
+		if (ConfigLoader.getConfig(null).wantToParse()) {
 			return new ArrayList<PantherModel>();
 		}
 		List<PantherModel> pantherModels = new ArrayList<PantherModel>();
