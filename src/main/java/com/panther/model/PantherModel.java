@@ -13,7 +13,7 @@ public class PantherModel {
 	@JsonIgnore
 	private String caseMessage;
 	@JsonIgnore
-	private String actualResponse = "";
+	private String actualResponse;
 
 	public String getDescription() {
 		return description;

@@ -2,6 +2,7 @@ package com.panther.model;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,12 +13,14 @@ public class PantherResponse {
 	private Map<String, String> headers;
 
 	@JsonInclude(Include.NON_NULL)
+	@JsonIgnore
 	private String status;
 
 	@JsonInclude(Include.NON_NULL)
 	private JsonNode body;
 
 	@JsonInclude(Include.NON_NULL)
+	@JsonIgnore
 	private String responseTime;
 
 	public Map<String, String> getHeaders() {

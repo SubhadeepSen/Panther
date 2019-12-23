@@ -24,7 +24,7 @@
 	},
 	{
 		"description": "Publish Message To Queue",
-		"fieldValidationEnable": false,
+		"fieldValidationEnable": true,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/message",
 			"method": "POST",
@@ -42,7 +42,7 @@
 		"response": {
 			"status": "200",
 			"body": {
-				"queueName": "test-queue",
+				"queueName": "$contains('test')",
 				"messageId": "1",
 				"message": "this is a test message"
 			}

@@ -10,13 +10,17 @@ Request/Response
 <div id="<<rqst-rspn>>-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<<rqst-rspn>>-heading">
 <div class="panel-body">
 <div class="row">
-<div class="col-lg-6">
+<div class="col-lg-4">
 <p class="center-align bold-font">Request</p>
 <p class="log-background-color"><<request-body>></p>
 </div>
-<div class="col-lg-6">
-<p class="center-align bold-font">Response</p>
-<p class="log-background-color"><<response-body>></p>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color"><<response-body-expected>></p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color"><<response-body-actual>></p>
 </div>
 </div>
 </div>

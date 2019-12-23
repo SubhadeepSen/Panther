@@ -252,8 +252,7 @@ public class PantherReport {
 		int totalCount = analytics.get(entry.getKey()).getTotalCaseCount();
 		for (String line : lines) {
 			if (line.contains("<<fileName>>")) {
-				line = line.replaceAll("<<fileName>>",
-						entry.getKey().replace(".json", EMPTY_STRING).replaceAll(" ", "-"));
+				line = line.replaceAll("<<fileName>>", entry.getKey().replace(".json", EMPTY_STRING).replaceAll(" ", "-"));
 			}
 			if (line.contains("<<caseStatusColor>>")) {
 				if (passedCount == totalCount) {
@@ -346,8 +345,18 @@ public class PantherReport {
 			if (line.contains("<<request-body>>")) {
 				line = line.replaceAll("<<request-body>>", formatToHtmlJsonView(OBJECT_MAPPER.writeValueAsString(model.getRequest())));
 			}
-			if (line.contains("<<response-body>>")) {
-				line = line.replaceAll("<<response-body>>", formatToHtmlJsonView(model.getActualResponse()));
+			if (line.contains("<<response-body-expected>>")) {
+				String expectedBody = model.getResponse().getBody().toString();
+				if(expectedBody.contains("$ignore")) {
+					expectedBody = expectedBody.replace("$", "");
+				}
+				if(expectedBody.contains("$contains")) {
+					expectedBody = expectedBody.replace("$", "");
+				}
+				line = line.replaceAll("<<response-body-expected>>", formatToHtmlJsonView(expectedBody));
+			}
+			if (line.contains("<<response-body-actual>>")) {
+				line = line.replaceAll("<<response-body-actual>>", formatToHtmlJsonView(model.getActualResponse()));
 			}
 			result.append(line).append(NEW_LINE);
 		}
