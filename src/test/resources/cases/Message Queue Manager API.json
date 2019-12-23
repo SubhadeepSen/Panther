@@ -1,6 +1,7 @@
 [
 	{
 		"description": "Create Message Queue",
+		"fieldValidationEnable": true,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
 			"method": "POST",
@@ -16,13 +17,14 @@
 		"response": {
 			"status": "200",
 			"body": {
-				"queueId": "1",
+				"queueId": "$ignore 1",
 				"queueName": "test-queue"
 			}
 		}
 	},
 	{
 		"description": "Publish Message To Queue",
+		"fieldValidationEnable": false,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/message",
 			"method": "POST",
@@ -48,6 +50,7 @@
 	},
 	{
 		"description": "Retrieve All Message Queues",
+		"fieldValidationEnable": true,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/queues",
 			"method": "GET",
@@ -61,7 +64,7 @@
 			"status": "200",
 			"body": [
 				{
-					"queueId": "1",
+					"queueId": "$ignore 1",
 					"queueName": "test-queue"
 				}
 			]
@@ -69,6 +72,7 @@
 	},
 	{
 		"description": "Retreive Messages From Queue",
+		"fieldValidationEnable": false,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/messages/{queueName}",
 			"method": "GET",
@@ -94,6 +98,7 @@
 	},
 	{
 		"description": "Retreive Messages From Queue in Chunks",
+		"fieldValidationEnable": false,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/messages/{queueName}/{page}/{pageSize}",
 			"method": "GET",
@@ -121,6 +126,7 @@
 	},
 	{
 		"description": "Consume Message From Queue",
+		"fieldValidationEnable": false,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/message/{queueName}",
 			"method": "DELETE",
@@ -144,6 +150,7 @@
 	},
 	{
 		"description": "Delete Queue",
+		"fieldValidationEnable": false,
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
 			"method": "DELETE",

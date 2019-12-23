@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class PantherModel {
 
 	private String description;
+	private boolean fieldValidationEnable;
 	private PantherRequest request;
 	private PantherResponse response;
 	@JsonIgnore
@@ -20,6 +21,14 @@ public class PantherModel {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public boolean isFieldValidationEnable() {
+		return fieldValidationEnable;
+	}
+
+	public void setFieldValidationEnable(boolean fieldValidationEnable) {
+		this.fieldValidationEnable = fieldValidationEnable;
 	}
 
 	public PantherRequest getRequest() {

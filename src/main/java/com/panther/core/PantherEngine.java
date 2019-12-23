@@ -5,6 +5,7 @@ import static com.panther.util.PantherUtils.EMPTY_STRING;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,6 +25,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panther.config.ConfigLoader;
 import com.panther.exception.PantherException;
 import com.panther.model.PantherConfig;
@@ -128,10 +132,18 @@ public class PantherEngine {
 			String actualResponse = EntityUtils.toString(httpResponse.getEntity());
 			pantherModel.setActualResponse(actualResponse);
 			String expectedResponse = pantherResponse.getBody().toString();
-			if (!PantherUtils.convertToJsonNode(actualResponse).equals(pantherResponse.getBody())) {
-				pantherModel.setCaseStatus(false);
-				pantherModel.setCaseMessage("body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
-				return;
+			if (pantherModel.isFieldValidationEnable()) {
+				if (!isValidBody(pantherResponse.getBody(), PantherUtils.convertToJsonNode(actualResponse))) {
+					pantherModel.setCaseStatus(false);
+					pantherModel.setCaseMessage("body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
+					return;
+				}
+			} else {
+				if (!PantherUtils.convertToJsonNode(actualResponse).equals(pantherResponse.getBody())) {
+					pantherModel.setCaseStatus(false);
+					pantherModel.setCaseMessage("body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
+					return;
+				}
 			}
 		}
 
@@ -153,5 +165,53 @@ public class PantherEngine {
 		}
 		pantherModel.setCaseStatus(true);
 		pantherModel.setCaseMessage(EMPTY_STRING);
+	}
+
+	// method to verify elements field by field #Recursive
+	private static boolean isValidBody(JsonNode expectedResponseBody, JsonNode actualResponseBody) {
+		if (expectedResponseBody == null && actualResponseBody == null) {
+			return true;
+		}
+		if (expectedResponseBody == null || actualResponseBody == null) {
+			return false;
+		}
+		String expectedTextValue = expectedResponseBody.asText();
+		if (!EMPTY_STRING.equals(expectedTextValue)) {
+			if (expectedTextValue.startsWith("$ignore")) {
+				return true;
+			} else if (expectedTextValue.startsWith("$contains")) {
+				int i = expectedTextValue.indexOf('\'');
+				int j = expectedTextValue.lastIndexOf('\'');
+				expectedTextValue = expectedTextValue.substring(i + 1, j);
+				if (actualResponseBody.asText().contains(expectedTextValue)) {
+					return true;
+				}
+			} else if (expectedTextValue.equals(actualResponseBody.asText())) {
+				return true;
+			}
+		}
+
+		boolean isValid = false;
+		if (expectedResponseBody instanceof ArrayNode) {
+			Iterator<JsonNode> expResIt = expectedResponseBody.iterator();
+			Iterator<JsonNode> actResIt = actualResponseBody.iterator();
+			while (expResIt.hasNext()) {
+				isValid = isValidBody(expResIt.next(), actResIt.next());
+				if (!isValid) {
+					return false;
+				}
+			}
+		} else if (expectedResponseBody instanceof ObjectNode) {
+			Iterator<Entry<String, JsonNode>> objFieldIt = expectedResponseBody.fields();
+			Entry<String, JsonNode> node = null;
+			while (objFieldIt.hasNext()) {
+				node = objFieldIt.next();
+				isValid = isValidBody(node.getValue(), actualResponseBody.get(node.getKey()));
+				if (!isValid) {
+					return false;
+				}
+			}
+		}
+		return isValid;
 	}
 }
