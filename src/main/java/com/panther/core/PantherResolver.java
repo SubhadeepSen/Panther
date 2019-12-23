@@ -51,8 +51,9 @@ public class PantherResolver {
 				if (pantherRequest.getBody() != null) {
 					bodyLocation = pantherRequest.getBody().textValue();
 					if (bodyLocation != null && bodyLocation.startsWith("$load")) {
-						bodyLocation = bodyLocation.replace("load", EMPTY_STRING).replace("$", EMPTY_STRING);
-						fileName = bodyLocation.substring(1, bodyLocation.length() - 1);
+						int i = bodyLocation.indexOf('\'');
+						int j = bodyLocation.lastIndexOf('\'');
+						fileName = bodyLocation.substring(i + 1, j);
 						pantherRequest.setBody(PantherUtils.loadAndGetBody(fileName));
 					}
 				}
@@ -61,8 +62,9 @@ public class PantherResolver {
 				if (pantherResponse.getBody() != null) {
 					bodyLocation = pantherResponse.getBody().textValue();
 					if (bodyLocation != null && bodyLocation.startsWith("$load")) {
-						bodyLocation = bodyLocation.replace("load", EMPTY_STRING).replace("$", EMPTY_STRING);
-						fileName = bodyLocation.substring(1, bodyLocation.length() - 1);
+						int i = bodyLocation.indexOf('\'');
+						int j = bodyLocation.lastIndexOf('\'');
+						fileName = bodyLocation.substring(i + 1, j);
 						pantherResponse.setBody(PantherUtils.loadAndGetBody(fileName));
 					}
 				}
