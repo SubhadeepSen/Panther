@@ -1,0 +1,9 @@
+{
+	"apiDocsLocation": "http://localhost:8085/message-queue-manager/api/v2/api-docs",
+	"wantToParse": false,
+	"testCasesLocation": "src/test/resources/cases",
+	"apiScheme": "http",
+	"payloadLocation": "src/test/resources/payloads",
+	"enableReportLogging": true,
+	"reportName": "Message Queue API"
+}
