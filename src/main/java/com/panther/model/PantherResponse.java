@@ -13,7 +13,6 @@ public class PantherResponse {
 	private Map<String, String> headers;
 
 	@JsonInclude(Include.NON_NULL)
-	@JsonIgnore
 	private String status;
 
 	@JsonInclude(Include.NON_NULL)

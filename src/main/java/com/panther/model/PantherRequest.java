@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class PantherRequest {
-	@JsonInclude(Include.NON_NULL)
-	private String description;
 
 	@JsonInclude(Include.NON_NULL)
 	private String url;
@@ -27,14 +25,6 @@ public class PantherRequest {
 
 	@JsonInclude(Include.NON_EMPTY)
 	private Map<String, String> headers;
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
 	public String getUrl() {
 		return url;
