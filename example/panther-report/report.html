@@ -1,0 +1,351 @@
+<!DOCTYPE html> <html> <head> <title>Panther</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="stylesheet" href="css/bootstrap.min.css"> <link rel="stylesheet" href="css/panther.css"> <link rel="stylesheet" href="css/font-awesome.min.css"> </head> <body class="container"> <h1 class="margin-bottom-20"> Message Queue API Test Report </h1> <div class="row margin-bottom-20"> <div class="col-lg-4 col-md-2 col-sm-1"></div> <div class="col-lg-4 col-md-6 col-sm-11"> <canvas id="pie-report" width="400" height="300"></canvas> </div> <div class="col-lg-4 col-md-4 col-sm-12 padding-left"> <div class="row"> <div class="col-sm-2"><span class="small-box teal-box"></div> <div class="col-sm-4 box-text">Total: 7</div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box green-box"></div> <div class="col-sm-4 box-text">Passed: 6</div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box red-box"></div> <div class="col-sm-4 box-text">Failed: 1</div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box yellow-box"></div> <div class="col-sm-8 box-text">Response time (min): 132 ms</div> </div> <div class="row"> <div class="col-sm-2"><span class="small-box blue-box"></div> <div class="col-sm-8 box-text">Response time (max): 207 ms</div> </div> </div> </div> <div class="panel-group" id="Message-Queue-Manager-API" role="tablist" aria-multiselectable="true">
+<div class="panel left-border-1">
+<div class="panel-heading orange-background" role="tab" id="Message-Queue-Manager-API-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#Message-Queue-Manager-API" href="#Message-Queue-Manager-API-collapse" aria-expanded="true" aria-controls="Message-Queue-Manager-API-collapse">
+Message-Queue-Manager-API <span class="float-right"> 6 / 7</span>
+</a>
+</h4>
+</div>
+<div id="Message-Queue-Manager-API-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Message-Queue-Manager-API-heading">
+<div class="panel-body">
+<div class="panel-group" id="CreateMessageQueue" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading green-background" role="tab" id="CreateMessageQueue-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#CreateMessageQueue" href="#CreateMessageQueue-collapse" aria-expanded="false" aria-controls="CreateMessageQueue-collapse">
+CreateMessageQueue <span class="float-right">Passed (207 ms)</span>
+</a>
+</h4>
+</div>
+<div id="CreateMessageQueue-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="CreateMessageQueue-heading">
+<div class="panel-body">
+<p class="error-message"></p>
+<div class="panel-group" id="CreateMessageQueue-rr" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading green-background" role="tab" id="CreateMessageQueue-rr-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#CreateMessageQueue-rr" href="#CreateMessageQueue-rr-collapse" aria-expanded="false" aria-controls="CreateMessageQueue-rr-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="CreateMessageQueue-rr-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="CreateMessageQueue-rr-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-4">
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color">{<br>"url":"http://localhost:8085/message-queue-manager/api/queue/test-queue", <br>"method":"POST", <br>"pathParams":{<br>"queueName":"test-queue"<br>}, <br>"headers":{<br>"Authorization":"", <br>"Accept":"application/json", <br>"Content-Type":"application/json"<br>}<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color">{<br>"queueId":"ignore 1", <br>"queueName":"test-queue"<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color">{<br>"queueId":"53", <br>"queueName":"test-queue"<br>}</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="panel-group" id="PublishMessageToQueue" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading green-background" role="tab" id="PublishMessageToQueue-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#PublishMessageToQueue" href="#PublishMessageToQueue-collapse" aria-expanded="false" aria-controls="PublishMessageToQueue-collapse">
+PublishMessageToQueue <span class="float-right">Passed (136 ms)</span>
+</a>
+</h4>
+</div>
+<div id="PublishMessageToQueue-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="PublishMessageToQueue-heading">
+<div class="panel-body">
+<p class="error-message"></p>
+<div class="panel-group" id="PublishMessageToQueue-rr" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading green-background" role="tab" id="PublishMessageToQueue-rr-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#PublishMessageToQueue-rr" href="#PublishMessageToQueue-rr-collapse" aria-expanded="false" aria-controls="PublishMessageToQueue-rr-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="PublishMessageToQueue-rr-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="PublishMessageToQueue-rr-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-4">
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color">{<br>"url":"http://localhost:8085/message-queue-manager/api/message", <br>"method":"POST", <br>"body":{<br>"queueName":"test-queue", <br>"messageId":"", <br>"message":"this is a test message"<br>}, <br>"headers":{<br>"Authorization":"", <br>"Accept":"application/json", <br>"Content-Type":"application/json"<br>}<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color">{<br>"queueName":"contains('test')", <br>"messageId":"1", <br>"message":"this is a test message"<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color">{<br>"messageId":"1", <br>"queueName":"test-queue", <br>"message":"this is a test message"<br>}</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="panel-group" id="RetrieveAllMessageQueues" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading green-background" role="tab" id="RetrieveAllMessageQueues-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#RetrieveAllMessageQueues" href="#RetrieveAllMessageQueues-collapse" aria-expanded="false" aria-controls="RetrieveAllMessageQueues-collapse">
+RetrieveAllMessageQueues <span class="float-right">Passed (136 ms)</span>
+</a>
+</h4>
+</div>
+<div id="RetrieveAllMessageQueues-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="RetrieveAllMessageQueues-heading">
+<div class="panel-body">
+<p class="error-message"></p>
+<div class="panel-group" id="RetrieveAllMessageQueues-rr" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading green-background" role="tab" id="RetrieveAllMessageQueues-rr-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#RetrieveAllMessageQueues-rr" href="#RetrieveAllMessageQueues-rr-collapse" aria-expanded="false" aria-controls="RetrieveAllMessageQueues-rr-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="RetrieveAllMessageQueues-rr-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="RetrieveAllMessageQueues-rr-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-4">
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color">{<br>"url":"http://localhost:8085/message-queue-manager/api/queues", <br>"method":"GET", <br>"headers":{<br>"Authorization":"", <br>"Accept":"application/json", <br>"Content-Type":"application/json"<br>}<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color">[<br>{<br>"queueId":"ignore 1", <br>"queueName":"test-queue"<br>}<br>]</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color">[<br>{<br>"queueId":"53", <br>"queueName":"test-queue"<br>}<br>]</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="panel-group" id="RetreiveMessagesFromQueue" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading green-background" role="tab" id="RetreiveMessagesFromQueue-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#RetreiveMessagesFromQueue" href="#RetreiveMessagesFromQueue-collapse" aria-expanded="false" aria-controls="RetreiveMessagesFromQueue-collapse">
+RetreiveMessagesFromQueue <span class="float-right">Passed (137 ms)</span>
+</a>
+</h4>
+</div>
+<div id="RetreiveMessagesFromQueue-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="RetreiveMessagesFromQueue-heading">
+<div class="panel-body">
+<p class="error-message"></p>
+<div class="panel-group" id="RetreiveMessagesFromQueue-rr" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading green-background" role="tab" id="RetreiveMessagesFromQueue-rr-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#RetreiveMessagesFromQueue-rr" href="#RetreiveMessagesFromQueue-rr-collapse" aria-expanded="false" aria-controls="RetreiveMessagesFromQueue-rr-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="RetreiveMessagesFromQueue-rr-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="RetreiveMessagesFromQueue-rr-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-4">
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color">{<br>"url":"http://localhost:8085/message-queue-manager/api/messages/test-queue", <br>"method":"GET", <br>"pathParams":{<br>"queueName":"test-queue"<br>}, <br>"headers":{<br>"Authorization":"", <br>"Accept":"application/json", <br>"Content-Type":"application/json"<br>}<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color">[<br>{<br>"queueName":"test-queue", <br>"messageId":"1", <br>"message":"this is a test message"<br>}<br>]</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color">[<br>{<br>"messageId":"1", <br>"queueName":"test-queue", <br>"message":"this is a test message"<br>}<br>]</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="panel-group" id="RetreiveMessagesFromQueueinChunks" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading red-background" role="tab" id="RetreiveMessagesFromQueueinChunks-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#RetreiveMessagesFromQueueinChunks" href="#RetreiveMessagesFromQueueinChunks-collapse" aria-expanded="false" aria-controls="RetreiveMessagesFromQueueinChunks-collapse">
+RetreiveMessagesFromQueueinChunks <span class="float-right">Failed (132 ms)</span>
+</a>
+</h4>
+</div>
+<div id="RetreiveMessagesFromQueueinChunks-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="RetreiveMessagesFromQueueinChunks-heading">
+<div class="panel-body">
+<p class="error-message">body mismatched: { actual: [], expected: [{"queueName":"test-queue","messageId":"1","message":"this is a test message"}] }</p>
+<div class="panel-group" id="RetreiveMessagesFromQueueinChunks-rr" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading red-background" role="tab" id="RetreiveMessagesFromQueueinChunks-rr-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#RetreiveMessagesFromQueueinChunks-rr" href="#RetreiveMessagesFromQueueinChunks-rr-collapse" aria-expanded="false" aria-controls="RetreiveMessagesFromQueueinChunks-rr-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="RetreiveMessagesFromQueueinChunks-rr-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="RetreiveMessagesFromQueueinChunks-rr-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-4">
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color">{<br>"url":"http://localhost:8085/message-queue-manager/api/messages/test-queue/1/1", <br>"method":"GET", <br>"pathParams":{<br>"queueName":"test-queue", <br>"page":"1", <br>"pageSize":"1"<br>}, <br>"headers":{<br>"Authorization":"", <br>"Accept":"application/json", <br>"Content-Type":"application/json"<br>}<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color">[<br>{<br>"queueName":"test-queue", <br>"messageId":"1", <br>"message":"this is a test message"<br>}<br>]</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color">[<br><br>]</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="panel-group" id="ConsumeMessageFromQueue" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading green-background" role="tab" id="ConsumeMessageFromQueue-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#ConsumeMessageFromQueue" href="#ConsumeMessageFromQueue-collapse" aria-expanded="false" aria-controls="ConsumeMessageFromQueue-collapse">
+ConsumeMessageFromQueue <span class="float-right">Passed (132 ms)</span>
+</a>
+</h4>
+</div>
+<div id="ConsumeMessageFromQueue-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="ConsumeMessageFromQueue-heading">
+<div class="panel-body">
+<p class="error-message"></p>
+<div class="panel-group" id="ConsumeMessageFromQueue-rr" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading green-background" role="tab" id="ConsumeMessageFromQueue-rr-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#ConsumeMessageFromQueue-rr" href="#ConsumeMessageFromQueue-rr-collapse" aria-expanded="false" aria-controls="ConsumeMessageFromQueue-rr-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="ConsumeMessageFromQueue-rr-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="ConsumeMessageFromQueue-rr-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-4">
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color">{<br>"url":"http://localhost:8085/message-queue-manager/api/message/test-queue", <br>"method":"DELETE", <br>"pathParams":{<br>"queueName":"test-queue"<br>}, <br>"headers":{<br>"Authorization":"", <br>"Accept":"application/json", <br>"Content-Type":"application/json"<br>}<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color">{<br>"queueName":"test-queue", <br>"messageId":"1", <br>"message":"this is a test message"<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color">{<br>"messageId":"1", <br>"queueName":"test-queue", <br>"message":"this is a test message"<br>}</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-body">
+<div class="panel-group" id="DeleteQueue" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-2">
+<div class="panel-heading green-background" role="tab" id="DeleteQueue-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#DeleteQueue" href="#DeleteQueue-collapse" aria-expanded="false" aria-controls="DeleteQueue-collapse">
+DeleteQueue <span class="float-right">Passed (142 ms)</span>
+</a>
+</h4>
+</div>
+<div id="DeleteQueue-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="DeleteQueue-heading">
+<div class="panel-body">
+<p class="error-message"></p>
+<div class="panel-group" id="DeleteQueue-rr" role="tablist" aria-multiselectable="true">
+<div class="panel panel-default left-border-3">
+<div class="panel-heading green-background" role="tab" id="DeleteQueue-rr-heading">
+<h4 class="panel-title">
+<a role="button" data-toggle="collapse" data-parent="#DeleteQueue-rr" href="#DeleteQueue-rr-collapse" aria-expanded="false" aria-controls="DeleteQueue-rr-collapse">
+Request/Response
+</a>
+</h4>
+</div>
+<div id="DeleteQueue-rr-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="DeleteQueue-rr-heading">
+<div class="panel-body">
+<div class="row">
+<div class="col-lg-4">
+<p class="center-align bold-font">Request</p>
+<p class="log-background-color">{<br>"url":"http://localhost:8085/message-queue-manager/api/queue/test-queue", <br>"method":"DELETE", <br>"pathParams":{<br>"queueName":"test-queue"<br>}, <br>"headers":{<br>"Authorization":"", <br>"Accept":"application/json", <br>"Content-Type":"application/json"<br>}<br>}</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Expected Response</p>
+<p class="log-background-color">true</p>
+</div>
+<div class="col-lg-4">
+<p class="center-align bold-font">Actual Response</p>
+<p class="log-background-color">true</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+ <script src="js/jquery.min.js"></script> <script src="js/bootstrap.min.js"></script> <script src='js/chart.min.js'></script> <script src='js/panther.js'></script> </body> </html>

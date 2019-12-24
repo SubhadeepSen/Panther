@@ -1,0 +1,116 @@
+.panel-title>a {
+	display: block;
+	position: relative;
+	text-decoration: none;
+}
+
+.panel-title>a:after {
+	content: "\f078"; /* fa-chevron-down */
+	font-family: 'FontAwesome';
+	position: absolute;
+	right: 0;
+}
+
+.panel-title>a[aria-expanded="true"]:after {
+	content: "\f077"; /* fa-chevron-up */
+}
+
+.center-align {
+	text-align: center !important;
+}
+
+body {
+	background-color: #80808020 !important;
+}
+
+.green-background {
+	background-color: #4caf50 !important;
+}
+
+.orange-background {
+	background-color: #ff5722 !important;
+}
+
+.red-background {
+	background-color: #f44336 !important;
+}
+
+.left-border-1 {
+	border-left: 5px solid #607D8B !important;
+}
+
+.left-border-2 {
+	border-left: 5px solid #2196F3 !important;
+}
+
+.left-border-3 {
+	border-left: 5px solid #00bcd4 !important;
+}
+
+.margin-bottom-20 {
+	margin-bottom: 20px;
+}
+
+.panel-body {
+	padding-bottom: 0px !important;
+}
+
+.small-box {
+	float: right;
+	width: 22px;
+	height: 22px;
+	margin: 5px;
+	border: 1px solid rgba(0, 0, 0, .2);
+	border-radius: 4px;
+}
+
+.padding-left {
+	padding-left: 30px;
+}
+
+.box-text {
+	margin-top: 5px;
+	margin-left: -25px;
+	font-weight: bold;
+}
+
+.green-box {
+	background: #4caf50 !important;
+}
+
+.red-box {
+	background: #f44336 !important;
+}
+
+.teal-box {
+	background: #009688;
+}
+
+.yellow-box {
+	background: #ffc107 !important;
+}
+
+.blue-box {
+	background: #3f51b5 !important;
+}
+
+.float-right {
+	float: right;
+	margin-right: 5%;
+}
+
+.log-background-color {
+	background-color: #a9a9a961;
+	padding: 10px;
+	border-radius: 10px;
+	color: teal;
+}
+
+.error-message {
+	color: #ff0000b5;
+	font-weight: bold;
+}
+
+.bold-font {
+	font-weight: bold;
+}
