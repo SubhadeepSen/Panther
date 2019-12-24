@@ -113,4 +113,5 @@ Explanation:
 ```
 
 ## Generated Test Report
+[Test Report Example](https://github.com/SubhadeepSen/Panther/blob/master/example/panther-report/report.html)
 
