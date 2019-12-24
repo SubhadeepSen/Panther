@@ -29,8 +29,8 @@ Add the panther dependency in your project.
 <artifactId>panther</artifactId>
 <version>1.0.0</version>
 ```
-Create panther-config.json under src/test/resource and add the following parameters,
-
+Create __panther-config.json__ under __src/test/resource__ and add the following parameters,
+```
 {
 	"apiDocsLocation": "http://localhost:8085/message-queue-manager/api/v2/api-docs",
 	"wantToParse": false,
@@ -40,11 +40,10 @@ Create panther-config.json under src/test/resource and add the following paramet
 	"enableReportLogging": true,
 	"reportName": "Message Queue API"
 }
+```
+Create a test class and annotate the class with __@RunWith(PantherRunner.class)__
 
-Create a test class and annotate the class with @RunWith(PantherRunner.class)
-
-If your API requires authentication, then create a method annotated with @Auth which returns Authentication interface. You can also implement the Authentication
-interface.
+If your API requires authentication, then create a method annotated with __@Auth__ which returns Authentication interface. You can also implement the Authentication interface.
 
 Below is an example for creating the Runner class.
 ```
@@ -59,7 +58,7 @@ public class MQManagerApiTestRunner {
 ```
 Now you can run the Runner class with JUnit.
 
-Every feature file is a json array with scenarios. Below is an example of a feature file.
+__Every feature file is a json array with scenarios.__ Below is an example of a feature file.
 
 Explanation:
 ```
@@ -83,10 +82,10 @@ Explanation:
 ```
 
 - when fieldValidationEnable = true
-- $ignore => does not validate that field
-- $contains('String') => check whether the field contains the given string or not
+- __$ignore__ => does not validate that field
+- __$contains('String')__ => check whether the field contains the given string or not
 
-- $load('fileName') => use to load request or response from different json file
+- __$load('fileName')__ => use to load request or response from different json file
 
 ```
 {
@@ -112,3 +111,6 @@ Explanation:
 	}
 }
 ```
+
+## Generated Test Report
+
