@@ -81,7 +81,7 @@ Explanation:
 }
 ```
 
-- when fieldValidationEnable = true
+- when __fieldValidationEnable = true__
 - __$ignore__ => does not validate that field
 - __$contains('String')__ => check whether the field contains the given string or not
 
