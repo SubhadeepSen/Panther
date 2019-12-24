@@ -1,6 +1,6 @@
 # Panther - An API Test Automation Framework
 
-This automation test framework has been made as simple as possible to automate the REST API testing. You just need to add the panther dependency in your project. You can write the feature files in json format or you can generate the feature files by using the framework. If you decide to generate the feature files then you will have to provide the location of swagger document to the framework and the location could be http(s) url or local system in panther-config file. The panther-config.json is a configuration file to the framework which has very minimum number of parameters and gives your better control. This file should be present under src/test/resource. 
+This automation test framework has been made as simple as possible to automate the REST API testing. You just need to add the panther dependency in your project. You can write the feature files in json format or you can generate the feature files by using the framework. If you decide to generate the feature files then you will have to provide the location of swagger document to the framework and the location could be http(s) url or local system in panther-config file. The panther-config.json is a configuration file to the framework which has very minimum number of parameters and gives you better control. This file should be present under src/test/resource. 
 
 #### panther-config.json
 
