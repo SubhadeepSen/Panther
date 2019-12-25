@@ -2,6 +2,8 @@
 	{
 		"description": "Create Message Queue",
 		"fieldValidationEnable": true,
+		"preExecution": "com.panther.auth.TestExec::doSomethingPre",
+		"postExecution": "com.panther.auth.TestExec::doSomethingPost",
 		"request": {
 			"url": "http://localhost:8085/message-queue-manager/api/queue/{queueName}",
 			"method": "POST",

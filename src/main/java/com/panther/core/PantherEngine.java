@@ -4,6 +4,7 @@ import static com.panther.util.PantherUtils.EMPTY_STRING;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,6 +46,7 @@ public class PantherEngine {
 	private static final String GET = "GET";
 
 	public void execute(PantherModel pantherModel) throws UnsupportedEncodingException {
+		invokeMethod(pantherModel.getPreExecution(), pantherModel);
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		PantherRequest pantherRequest = null;
 		HttpRequestBase baseRequest = null;
@@ -109,6 +111,8 @@ public class PantherEngine {
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
 			throw new PantherException(e.getMessage());
+		} finally {
+			invokeMethod(pantherModel.getPostExecution(), pantherModel);
 		}
 	}
 
@@ -135,13 +139,15 @@ public class PantherEngine {
 			if (pantherModel.isFieldValidationEnable()) {
 				if (!isValidBody(pantherResponse.getBody(), PantherUtils.convertToJsonNode(actualResponse))) {
 					pantherModel.setCaseStatus(false);
-					pantherModel.setCaseMessage("body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
+					pantherModel.setCaseMessage(
+							"body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
 					return;
 				}
 			} else {
 				if (!PantherUtils.convertToJsonNode(actualResponse).equals(pantherResponse.getBody())) {
 					pantherModel.setCaseStatus(false);
-					pantherModel.setCaseMessage("body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
+					pantherModel.setCaseMessage(
+							"body mismatched: { actual: " + actualResponse + ", expected: " + expectedResponse + " }");
 					return;
 				}
 			}
@@ -213,5 +219,19 @@ public class PantherEngine {
 			}
 		}
 		return isValid;
+	}
+
+	private void invokeMethod(String executionString, PantherModel pantherModel) {
+		if (null != executionString && !EMPTY_STRING.equals(executionString)) {
+			try {
+				String[] tokens = executionString.split("::");
+				Class<?> forName = Class.forName(tokens[0]);
+				Object obj = forName.newInstance();
+				Method method = forName.getMethod(tokens[1], PantherModel.class);
+				method.invoke(obj, pantherModel);
+			} catch (Exception e) {
+				throw new PantherException(e.getMessage());
+			}
+		}
 	}
 }

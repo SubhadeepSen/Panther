@@ -46,7 +46,7 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 				auth = (Authentication) authMethod.get().invoke(testClass.newInstance());
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| InstantiationException e) {
-				e.printStackTrace();
+				LOGGER.error(e.getMessage());
 			}
 		}
 		PantherConfig pantherConfig = ConfigLoader.getConfig(auth);
@@ -90,6 +90,7 @@ public class PantherRunner extends ParentRunner<PantherModel> {
 			}
 		} catch (UnsupportedEncodingException | PantherException e) {
 			notifier.fireTestFailure(new Failure(Description.createSuiteDescription(pantherModel.getDescription()), e));
+			LOGGER.error(e.getMessage());
 		} finally {
 			notifier.fireTestFinished(Description.createSuiteDescription(pantherModel.getDescription()));
 			count--;

@@ -6,8 +6,10 @@ public class PantherModel {
 
 	private String description;
 	private boolean fieldValidationEnable;
+	private String preExecution;
 	private PantherRequest request;
 	private PantherResponse response;
+	private String postExecution;
 	@JsonIgnore
 	private boolean caseStatus;
 	@JsonIgnore
@@ -31,6 +33,14 @@ public class PantherModel {
 		this.fieldValidationEnable = fieldValidationEnable;
 	}
 
+	public String getPreExecution() {
+		return preExecution;
+	}
+
+	public void setPreExecution(String preExecution) {
+		this.preExecution = preExecution;
+	}
+
 	public PantherRequest getRequest() {
 		return request;
 	}
@@ -45,6 +55,14 @@ public class PantherModel {
 
 	public void setResponse(PantherResponse response) {
 		this.response = response;
+	}
+
+	public String getPostExecution() {
+		return postExecution;
+	}
+
+	public void setPostExecution(String postExecution) {
+		this.postExecution = postExecution;
 	}
 
 	public boolean caseStatus() {
@@ -70,4 +88,5 @@ public class PantherModel {
 	public void setActualResponse(String actualResponse) {
 		this.actualResponse = actualResponse;
 	}
+
 }
