@@ -65,6 +65,8 @@ Explanation:
 {
   "description" : "unique name of the scenario",
   "fieldValidationEnable" : true = validates response body field by field and useful when you want to use $ignore or $contains, false = validates response as an object,
+  "preExecution": "qualified class name::pre method name",
+  "postExecution": "qualified class name::post method name",
   "request" : {
     "url" : "api endpoint url",
     "method" : "HTTP Method",
@@ -91,6 +93,8 @@ Explanation:
 {
 	"description": "Publish Message To Queue",
 	"fieldValidationEnable": true,
+	"preExecution": "com.panther.auth.TestExec::doSomethingPre",
+	"postExecution": "com.panther.auth.TestExec::doSomethingPost",
 	"request": {
 		"url": "http://localhost:8085/message-queue-manager/api/message",
 		"method": "POST",
@@ -109,6 +113,16 @@ Explanation:
 			"message": "this is a test message"
 		}
 	}
+}
+```
+Pre & Post Execution method signature:
+```
+public void doSomethingPre(PantherModel model) {
+// code blocks
+}
+
+public void doSomethingPost(PantherModel model) {
+// code blocks
 }
 ```
 
