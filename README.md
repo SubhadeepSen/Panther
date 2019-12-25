@@ -113,5 +113,7 @@ Explanation:
 ```
 
 ## Generated Test Report
-[Test Report Example](https://github.com/SubhadeepSen/Panther/blob/master/example/panther-report/report.html)
-
+<div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/example/screenshots/scenarios.jpg"/></div>
+<div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/example/screenshots/cases.jpg"/></div>
+<div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/example/screenshots/req-resp-success.jpg" /></div>
+<div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/example/screenshots/req-resp-failed.jpg" /></div>
