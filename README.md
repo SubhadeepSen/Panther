@@ -131,3 +131,6 @@ public void doSomethingPost(PantherModel model) {
 <div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/example/screenshots/cases.jpg"/></div>
 <div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/example/screenshots/req-resp-success.jpg" /></div>
 <div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/example/screenshots/req-resp-failed.jpg" /></div>
+
+## Design
+<div style="text-align:center"><img src="https://github.com/SubhadeepSen/Panther/blob/master/design-doc/flow-design.jpg"/></div>
